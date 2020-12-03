@@ -1,3 +1,3 @@
 # Nature-Inspired Computing CA2
 
-Code goes here!
+Run ga.py for the main genetic algorithm.
