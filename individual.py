@@ -12,13 +12,13 @@ class INDIVIDUAL:
     def __init__(self, i):
         
         self.ID = i
-        self.genome = np.random.random()*0.1
+        self.genome = np.random.random()*0.2
         self.fitness = 0
     
     def Start_Evaluation(self, env, pb=True, pp=True):
         
         
-        self.sim = pyrosim.Simulator(eval_time=c.evalTime, play_blind=pb, play_paused=pp)
+        self.sim = pyrosim.Simulator(eval_time=c.evalTime, play_blind=pb, play_paused=pp, xyz=[0, 7.5, 0.8], hpr=[270,0,0.0])
         
         # add robot to sim
         self.robot = ROBOT(self.sim, self.genome)
@@ -28,6 +28,8 @@ class INDIVIDUAL:
         
         # define collisions in sim
         self.sim.assign_collision('ball', 'robot')
+        self.sim.assign_collision('goalpost', 'robot')
+        self.sim.assign_collision('ball', 'goalpost')
     
         self.sim.start()
         
@@ -41,7 +43,7 @@ class INDIVIDUAL:
     def Mutate(self):
         
         # mutation function
-        self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome))), 0.1)
+        self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome))), 0.2)
         
     def Print(self):
         print('[', self.ID, ':', self.fitness, end=']')
