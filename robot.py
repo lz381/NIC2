@@ -17,7 +17,7 @@ class ROBOT:
         
         box = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length=4 *
                            WHEEL_RADIUS, width=5 * WHEEL_RADIUS, height=WHEEL_RADIUS,
-                           mass=10)
+                           mass=10, collision_group = 'robot')
         
         axles = [0] * 4
         count = 0
@@ -42,7 +42,7 @@ class ROBOT:
         
         self.position = sim.send_position_sensor(body_id = box)
         
-        sim.film_body(box, method='follow')
+        #sim.film_body(box, method='follow')
 
 
     

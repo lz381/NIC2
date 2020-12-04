@@ -1,29 +1,33 @@
 from population import POPULATION
+from environments import ENVIRONMENTS
+import constants as c
+#import constants
+
+envs = ENVIRONMENTS()
 
 # generate intial population
-parents = POPULATION(popsize=5)
+parents = POPULATION(popsize=c.popSize)
 parents.Initialize()
-parents.Evaluate()
+parents.Evaluate(envs=envs)
+
 parents.Print()
     
-generations = 100
-POPSIZE = 5
-
-
-for i in range(generations):
+for i in range(c.numGens):
     
-    children = POPULATION(popsize=POPSIZE)
+    children = POPULATION(popsize=c.popSize)
     
     # selection and mutation
     children.Fill_From(parents)
     print("\n Generation ", i, ":")
-    children.Evaluate()
+    children.Evaluate(envs=envs)
     children.Print()
     parents = children
 
-# best solution
-parents.p[0].Start_Evaluation(pb=False)
-parents.p[0].Compute_Fitness()
+# visual check of last gen population
+parents.Evaluate(envs=envs, pb=False)
+
+
+
 
 
 

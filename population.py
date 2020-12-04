@@ -19,15 +19,26 @@ class POPULATION:
             self.p[i].Print()
 
     
-    def Evaluate(self):
+    def Evaluate(self, envs, pb=True):
         
-        # evaluate each individual in population
+        # reset fitness to 0 before evaluation to ensure no carry-over from previous gens
         for i in self.p:
-            self.p[i].Start_Evaluation(pb=True)
+            self.p[i].fitness = 0
+        
+        # compute fitness for each environment
+        for e in envs.envs:
             
-        #compute fitness of each individual in population
+            # evaluate each individual in population
+            for i in self.p:
+                self.p[i].Start_Evaluation(env = envs.envs[e], pb=pb)
+                
+            # compute fitness of each individual in population
+            for i in self.p:
+                self.p[i].Compute_Fitness()
+        
+        # final fitness is average fitness over number of environments
         for i in self.p:
-            self.p[i].Compute_Fitness()
+            self.p[i].fitness = self.p[i].fitness / len(envs.envs)
             
     def Initialize(self):
         
