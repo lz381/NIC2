@@ -1,3 +1,5 @@
+# these are dex's robots
+
 class ROBOT:
     """
     Robot blueprints.
