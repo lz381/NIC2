@@ -1,6 +1,7 @@
 from individual import INDIVIDUAL
 import copy
 import numpy as np
+
 class POPULATION:
     """
     Population of individual robot simulations.
@@ -10,7 +11,6 @@ class POPULATION:
         # empty population of individuals
         self.p = {}
         self.popsize=popsize
-        self.total = 0
         
         
     def Print(self):
@@ -27,35 +27,29 @@ class POPULATION:
         
         # compute fitness for each environment
         for e in envs.envs:
+            
             # evaluate each individual in population
             for i in self.p:
                 self.p[i].Start_Evaluation(env = envs.envs[e], pb=pb)
                 
             # compute fitness of each individual in population
             for i in self.p:
-                self.p[i].Compute_Fitness()                                    
+                self.p[i].Compute_Fitness()
         
         # final fitness is average fitness over number of environments
         for i in self.p:
-#            for e in evns.envs:
-#                self.p[i].fitness = self.p[i].fitness / len(envs.envs)            
-            self.total = self.p[i].fitness  / len(envs.envs)
-            self.total = 0
+            self.p[i].fitness = self.p[i].fitness / len(envs.envs)
             
     def Initialize(self):
         
         # generate random population of individuals
         for i in range(0, self.popsize):
             self.p[i] = INDIVIDUAL(i)
-            print('fieuhirhgeirgr')
-            print(self.popsize)
-    
     
     def Mutate(self):
         for i in range(0, self.popsize):
             self.p[i].Mutate()
-    
-    
+            
     def Copy_Best_From(self, other):
         
         # ELITISM - select best solution from parent pop (other) to include in children population
@@ -108,6 +102,3 @@ class POPULATION:
             return parent1
         else:
             return parent2
-        
-        
-        
