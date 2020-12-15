@@ -1,3 +1,24 @@
+import sys
+sys.path.insert(0, '../..')
+import pyrosim # noqa
+import numpy as np
+import random
+import math
+
+
+
+# create a random func that will return either True or False (Bool logic)
+def random_bool():               
+    return np.random.randint(2,size=1)[0]
+
+# create a random func that will select the number of wheels (pairs)  
+def random_Wheel():               
+    return np.random.randint(9,size=1)[0]
+
+# create a random number between -1 and 1 using the random module with uniform dist
+def random2():               
+    return random.uniform(-1,1)
+    
 class ROBOT:
     """
     Robot blueprints.
@@ -6,24 +27,85 @@ class ROBOT:
                
         WHEEL_RADIUS = wheel_size
         SPEED = 10
+        Number_of_Wheels = 4
+        # create a list for each Wheel.
+        wheels = [0] * Number_of_Wheels
         
-        wheels = [0] * 4
+        # set the count to be 0.
         count = 0
+        
+        # Number of sides wheels can be placed on. (on a real life car this is 2).
+        N_Sides = 2
+        
+        
+        # Create a random number between 2 and 16 for number of Wheeels.
+        random_num = random_Wheel()
+        random_num = (random_num+1)*2
+        
+        
+        # if 1 pair of wheels place it randomly
+        if Number_of_Wheels ==2:        
+            # create the length of the car based on the number of wheels
+            Len_Car = ((Number_of_Wheels-1)/2)
+            # sclae the car so i can call range with a float.
+            # Pyrosim plots objects with a centre so an object len 800 is (-400,400)
+            Scaled_Car_Len = Len_Car*100
+            Wheel_Space_2 = [(np.random.randint(-50,51,1)/100)[0]]
+        # if more than 1 pair of wheels place it equal distance.
+        else:
+            # Set the len of the Car to always be odd.
+            Len_Car = ((Number_of_Wheels-1)/2)
+            # sclae the car so i can call range with int.
+            # Pyrosim plots objects with a centre so an object len 800 is (-400,400)
+            Scaled_Car_Len = Len_Car*100
+            
+            Step_Wheels = int((Scaled_Car_Len*2)/((Number_of_Wheels/2)-1))
+            
+            Wheel_Space = list(range(int(-(Scaled_Car_Len)),int(Scaled_Car_Len-10),Step_Wheels))
+            Wheel_Space_2 = list(map(lambda x: (x/100)*WHEEL_RADIUS, Wheel_Space))
+            Wheel_Space_2.append(Len_Car*WHEEL_RADIUS)
+        
+        
+        
+        
+        # Create a Red Car Body.
+        box = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= Len_Car*2 *
+                           WHEEL_RADIUS, width=4 * WHEEL_RADIUS, height=WHEEL_RADIUS,
+                           mass=10,r=1, g=0, b=0,collision_group = 'robot')
+                           
+        # create the pole for the car to attach to
+        box2 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS*2, length= Len_Car*2 *
+                           WHEEL_RADIUS*0.02, width=4 * WHEEL_RADIUS *0.02, height=WHEEL_RADIUS*2,
+                           mass=1,r=0, g=1, b=0)
+                           
+        # create a box for the top of the pole.
+        box3 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS*3 , length= Len_Car*2 *
+                           WHEEL_RADIUS*0.25, width=4 * WHEEL_RADIUS *0.02, height=WHEEL_RADIUS*2,
+                           mass=1,r=0, g=1, b=0)
+                                                                
+        # Join the 3 boxes together.                            
+        joint = sim.send_hinge_joint( first_body_id = box , second_body_id = box2)
+        joint2 = sim.send_hinge_joint( first_body_id = box2 , second_body_id = box3)
+        
+        #if random() == True:
+        #    X_Position = 
+        #    X_Position = [-Number_of_Wheels/2,
+        
+        # create the wheels for the car.
+        # wheels are spheres and placed accroding to the values in x_pos and y_pos.
         for x_pos in [-2 * WHEEL_RADIUS, 2 * WHEEL_RADIUS]:
-            for y_pos in [-2 * WHEEL_RADIUS, 2 * WHEEL_RADIUS]:
-                
-                wheels[count] = sim.send_sphere(x=x_pos, y=y_pos, z=WHEEL_RADIUS, radius=WHEEL_RADIUS, b=0, g=0, r=1)
+            for y_pos in Wheel_Space_2:
+                #print(x_pos,y_pos)
+                wheels[count] = sim.send_sphere(
+                    x=x_pos, y=y_pos, z=WHEEL_RADIUS, radius=WHEEL_RADIUS, r=0, g=0, b=0)
                 count += 1
         
-        box = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length=4 *
-                           WHEEL_RADIUS, width=5 * WHEEL_RADIUS, height=WHEEL_RADIUS,
-                           mass=10, collision_group = 'robot', b=1, g=0, r=0)
         
-        axles = [0] * 4
+        axles = [0] * Number_of_Wheels
         count = 0
         
         for x_pos in [-2 * WHEEL_RADIUS, 2 * WHEEL_RADIUS]:
-            for y_pos in [-2 * WHEEL_RADIUS, 2 * WHEEL_RADIUS]:
+            for y_pos in Wheel_Space_2:
                 # position_control = False -> continuous range of motion
                 axles[count] = sim.send_hinge_joint(first_body_id=wheels[count],
                                                     second_body_id=box, x=x_pos,
@@ -35,14 +117,46 @@ class ROBOT:
         
         bias = sim.send_bias_neuron()
         
-        mneurons = [0] * 4
-        for i in range(4):
+        
+        # create a weight matrix - im a little confused by this looking at other code examples i believe i want
+        # it to be a matrix with the number of wheels and touch sensors, but wheels are always touching the ground.
+        # 
+        weight_matrix = np.random.rand(Number_of_Wheels+Number_of_Wheels,
+        Number_of_Wheels+Number_of_Wheels, 4)
+        
+        weight_matrix[:, :, 0:1] = weight_matrix[:, :, 0:1]*2.-1.
+
+        
+        mneurons = [0] * Number_of_Wheels
+        for i in range(Number_of_Wheels):
             mneurons[i] = sim.send_motor_neuron(axles[i])
-            sim.send_synapse(bias, mneurons[i], weight=-1.0)
+            sim.send_synapse(bias, mneurons[i], weight=random2())
+        
+        sim.film_body(box, method='follow')
+        
+        
+        #### Example Video www.youtube.com/watch?v=GcWJXxrKNk
+        
+        # ray sensors spaced Pi/6 radians apart.
+        R1 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=0,r3=0)
+        R2 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*1/6,r3=0) 
+        R3 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*2/6,r3=0) 
+        R4 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*3/6,r3=0) 
+        R5 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*4/6,r3=0) 
+        R6 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*5/6,r3=0) 
+        R7 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*6/6,r3=0) 
+        R8 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-1/6,r3=0) 
+        R9 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-2/6,r3=0)
+        R10 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-3/6,r3=0) 
+        R11 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-4/6,r3=0) 
+        R12 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-5/6,r3=0)         
+        
+        # Can set surface area to a constraint
+        Surface_Area = Number_of_Wheels*4*math.pi*WHEEL_RADIUS**2 + 2*Len_Car*2*WHEEL_RADIUS*4 * WHEEL_RADIUS*WHEEL_RADIUS
+        
+        
+        print(f' Surface Area is {Surface_Area}.')
         
         self.position = sim.send_position_sensor(body_id = box)
-        
-        #sim.film_body(box, method='follow')
-
-
+       
     
