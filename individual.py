@@ -37,14 +37,19 @@ class INDIVIDUAL:
         self.sim.wait_to_finish()
         
         # current fitness function is the sum of movement distance over each environment
-        self.fitness += self.sim.get_sensor_data(sensor_id = self.robot.position, svi=1)[-1]
+        self.fitness = self.sim.get_sensor_data(sensor_id = self.robot.position, svi=1)[-1]
+        print(self.fitness)
         del self.sim
         
     def Mutate(self):
         
         # mutation function
-        self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome))), 0.2)
+        # edit the genome to 
+        self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome/5))), 0.5)
+        print(self.genome)
+        
         
     def Print(self):
         print('[', self.ID, ':', self.fitness, end=']')
+        
         
