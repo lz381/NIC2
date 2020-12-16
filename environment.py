@@ -6,6 +6,7 @@ class ENVIRONMENT:
         # ball params
         self.ball_radius = 0.16
         self.ball_z = self.ball_radius
+        self.ball_psensor_id = 0
         
         
         
@@ -44,5 +45,7 @@ class ENVIRONMENT:
             sim.send_external_force(ball, x=-24, y=-60, z=30, time=5)
 
                 
+        # retrieve the position sensor id for the ball
+        self.ball_psensor_id = sim.send_position_sensor(body_id = ball)
         
         

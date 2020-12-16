@@ -41,6 +41,8 @@ class ROBOT:
             sim.send_synapse(bias, mneurons[i], weight=-1.0)
         
         self.position = sim.send_position_sensor(body_id = box)
+        # create a sensor to detect the collision between the ball and robot
+        self.tsensor_id = sim.send_touch_sensor(body_id = box)
         
         #sim.film_body(box, method='follow')
 
