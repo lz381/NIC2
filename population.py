@@ -34,7 +34,9 @@ class POPULATION:
                 
             # compute fitness of each individual in population
             for i in self.p:
-                self.p[i].Compute_Fitness()
+                #self.p[i].Compute_Fitness(metric="goals_scored")
+                #self.p[i].Compute_Fitness(metric="distance_travelled")
+                self.p[i].Compute_Fitness(metric="best_keeper")
         
         # final fitness is average fitness over number of environments
         for i in self.p:
