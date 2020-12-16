@@ -48,7 +48,10 @@ class POPULATION:
         for i in range(0, self.popsize):
             self.p[i] = INDIVIDUAL(i)
     
-    
+    def Mutate(self):
+        for i in range(0, self.popsize):
+            self.p[i].Mutate()
+            
     def Copy_Best_From(self, other):
         
         # ELITISM - select best solution from parent pop (other) to include in children population
@@ -101,6 +104,3 @@ class POPULATION:
             return parent1
         else:
             return parent2
-        
-        
-        

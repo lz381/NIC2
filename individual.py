@@ -130,8 +130,10 @@ class INDIVIDUAL:
     def Mutate(self):
         
         # mutation function
-        self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome))), 0.2)
+        # edit the genome to 
+        self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome/5))), 0.5)
+        print(self.genome)
+        
         
     def Print(self):
         print('[', self.ID, ':', self.fitness, end=']')
-        
