@@ -6,7 +6,6 @@ import random
 import math
 
 
-
 # create a random func that will return either True or False (Bool logic)
 def random_bool():               
     return np.random.randint(2,size=1)[0]
@@ -118,23 +117,19 @@ class ROBOT:
         bias = sim.send_bias_neuron()
         
         
+        # dex426-patch-1
         # create a weight matrix - im a little confused by this looking at other code examples i believe i want
         # it to be a matrix with the number of wheels and touch sensors, but wheels are always touching the ground.
-        # 
+        
         weight_matrix = np.random.rand(Number_of_Wheels+Number_of_Wheels,
         Number_of_Wheels+Number_of_Wheels, 4)
-        
         weight_matrix[:, :, 0:1] = weight_matrix[:, :, 0:1]*2.-1.
 
-        
         mneurons = [0] * Number_of_Wheels
         for i in range(Number_of_Wheels):
             mneurons[i] = sim.send_motor_neuron(axles[i])
             sim.send_synapse(bias, mneurons[i], weight=random2())
-        
-        sim.film_body(box, method='follow')
-        
-        
+               
         #### Example Video www.youtube.com/watch?v=GcWJXxrKNk
         
         # ray sensors spaced Pi/6 radians apart.
@@ -157,6 +152,8 @@ class ROBOT:
         
         print(f' Surface Area is {Surface_Area}.')
         
+        # create a sensor to detect the collision between the ball and robot
+        self.tsensor_id = sim.send_touch_sensor(body_id = box)
         self.position = sim.send_position_sensor(body_id = box)
-       
+
     
