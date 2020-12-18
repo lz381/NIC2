@@ -70,17 +70,17 @@ class ROBOT:
         # Create a Red Car Body.
         box = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= Len_Car*2 *
                            WHEEL_RADIUS, width=4 * WHEEL_RADIUS, height=WHEEL_RADIUS,
-                           mass=10,r=1, g=0, b=0,collision_group = 'robot')
+                           mass=10,r=1, g=0, b=0, collision_group = 'robot')
                            
         # create the pole for the car to attach to
         box2 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS*2, length= Len_Car*2 *
                            WHEEL_RADIUS*0.02, width=4 * WHEEL_RADIUS *0.02, height=WHEEL_RADIUS*2,
-                           mass=1,r=0, g=1, b=0)
+                           mass=1,r=0, g=1, b=0, collision_group='robot')
                            
         # create a box for the top of the pole.
         box3 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS*3 , length= Len_Car*2 *
                            WHEEL_RADIUS*0.25, width=4 * WHEEL_RADIUS *0.02, height=WHEEL_RADIUS*2,
-                           mass=1,r=0, g=1, b=0)
+                           mass=1,r=0, g=1, b=0, collision_group='robot')
                                                                 
         # Join the 3 boxes together.                            
         joint = sim.send_hinge_joint( first_body_id = box , second_body_id = box2)
@@ -96,7 +96,7 @@ class ROBOT:
             for y_pos in Wheel_Space_2:
                 #print(x_pos,y_pos)
                 wheels[count] = sim.send_sphere(
-                    x=x_pos, y=y_pos, z=WHEEL_RADIUS, radius=WHEEL_RADIUS, r=0, g=0, b=0)
+                    x=x_pos, y=y_pos, z=WHEEL_RADIUS, radius=WHEEL_RADIUS, r=0, g=0, b=0, collision_group='robot')
                 count += 1
         
         
@@ -150,7 +150,7 @@ class ROBOT:
         Surface_Area = Number_of_Wheels*4*math.pi*WHEEL_RADIUS**2 + 2*Len_Car*2*WHEEL_RADIUS*4 * WHEEL_RADIUS*WHEEL_RADIUS
         
         
-        print(f' Surface Area is {Surface_Area}.')
+        # print(f' Surface Area is {Surface_Area}.')
         
         # create a sensor to detect the collision between the ball and robot
         self.tsensor_id = sim.send_touch_sensor(body_id = box)
