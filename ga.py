@@ -4,6 +4,7 @@ import constants as c
 import csv
 import pickle
 
+# This is the generations that will be recorded, just went for 1/4*numGens
 instant_replay = [1, round(c.numGens/4), round(c.numGens/2), round((c.numGens/4)*3), c.numGens-1]
 count = 0
 
@@ -36,11 +37,13 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
             line.append(parents.p[j].fitness)
         writer.writerow(line)    
 
+        # If the gen number is right, then it saves the replay
         if i in instant_replay:
             filename = "RobotReplayGen_" + str(count) + ".p"
             with open(filename, "wb") as f:
                 pickle.dump(parents.p[0], f)
 
+        # Start of actual GA
         children = POPULATION(popsize=c.popSize)
         
         # selection and mutation
