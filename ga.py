@@ -40,10 +40,10 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
 
         # If the gen number is right, then it saves the replay
         if i in instant_replay:
-            filename = "RobotReplayGen_" + str(count) + ".p"
+            filename = "RobotReplayGen_" + str(i) + ".p"
             with open(filename, "wb") as f:
                 pickle.dump(parents.p[0], f)
-            count += 1
+
 
         # Start of actual GA
         children = POPULATION(popsize=c.popSize)
