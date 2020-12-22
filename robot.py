@@ -22,10 +22,10 @@ class ROBOT:
     """
     Robot blueprints.
     """
-    def __init__(self, sim, wheel_size):
+    def __init__(self, sim, genome):
                
-        WHEEL_RADIUS = wheel_size
-        SPEED = 10
+        WHEEL_RADIUS = 0.1
+        SPEED = 30
         Number_of_Wheels = 4
         # create a list for each Wheel.
         wheels = [0] * Number_of_Wheels
@@ -40,7 +40,7 @@ class ROBOT:
         # Create a random number between 2 and 16 for number of Wheeels.
         random_num = random_Wheel()
         random_num = (random_num+1)*2
-        
+
         
         # if 1 pair of wheels place it randomly
         if Number_of_Wheels ==2:        
@@ -113,44 +113,52 @@ class ROBOT:
                                                     position_control=False,
                                                     speed=SPEED)
                 count += 1
-        
-        bias = sim.send_bias_neuron()
-        
-        
+             
         # dex426-patch-1
         # create a weight matrix - im a little confused by this looking at other code examples i believe i want
         # it to be a matrix with the number of wheels and touch sensors, but wheels are always touching the ground.
-        
-        weight_matrix = np.random.rand(Number_of_Wheels+Number_of_Wheels,
-        Number_of_Wheels+Number_of_Wheels, 4)
-        weight_matrix[:, :, 0:1] = weight_matrix[:, :, 0:1]*2.-1.
-
-        mneurons = [0] * Number_of_Wheels
-        for i in range(Number_of_Wheels):
-            mneurons[i] = sim.send_motor_neuron(axles[i])
-            sim.send_synapse(bias, mneurons[i], weight=random2())
-               
         #### Example Video www.youtube.com/watch?v=GcWJXxrKNk
         
         # ray sensors spaced Pi/6 radians apart.
-        R1 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=0,r3=0)
-        R2 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*1/6,r3=0) 
-        R3 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*2/6,r3=0) 
-        R4 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*3/6,r3=0) 
-        R5 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*4/6,r3=0) 
-        R6 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*5/6,r3=0) 
-        R7 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*6/6,r3=0) 
-        R8 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-1/6,r3=0) 
-        R9 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-2/6,r3=0)
-        R10 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-3/6,r3=0) 
-        R11 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-4/6,r3=0) 
-        R12 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-5/6,r3=0)         
+        
+        raySensors = {}
+        raySensors[0] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=0,r3=0)
+        raySensors[1] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*1/6,r3=0) 
+        raySensors[2] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*2/6,r3=0) 
+        raySensors[3] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*3/6,r3=0) 
+        raySensors[4] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*4/6,r3=0) 
+        raySensors[5] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*5/6,r3=0) 
+        raySensors[6] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*6/6,r3=0) 
+        raySensors[7] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-1/6,r3=0) 
+        raySensors[8] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-2/6,r3=0)
+        raySensors[9] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-3/6,r3=0) 
+        raySensors[10] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-4/6,r3=0) 
+        raySensors[11] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-5/6,r3=0)         
+        
+        
+        # add sensor neurons
+        sensorNeurons = {}
+        for i, s in (raySensors.items()):
+            sensorNeurons[i] = sim.send_sensor_neuron(s)
+            
+        # motor neurons
+        mneurons = [0] * Number_of_Wheels
+        for i in range(Number_of_Wheels):
+            mneurons[i] = sim.send_motor_neuron(axles[i],tau = 0.3)
+            #sim.send_synapse(bias, mneurons[i], weight=random2())
+        
+        # weight matrix
+        
+        self.weight_array= genome
+        
+        # connect sensor neurons to motor neurons
+        for weight_i, s in (sensorNeurons.items()):
+            for weight_j, m in enumerate(mneurons):
+                sim.send_synapse(s, m, weight = self.weight_array[weight_i, weight_j])
+        
         
         # Can set surface area to a constraint
         Surface_Area = Number_of_Wheels*4*math.pi*WHEEL_RADIUS**2 + 2*Len_Car*2*WHEEL_RADIUS*4 * WHEEL_RADIUS*WHEEL_RADIUS
-        
-        
-        print(f' Surface Area is {Surface_Area}.')
         
         # create a sensor to detect the collision between the ball and robot
         self.tsensor_id = sim.send_touch_sensor(body_id = box)

@@ -13,7 +13,10 @@ class INDIVIDUAL:
         
         self.ID = i
         self.ball_psensor_id = 0
-        self.genome = np.random.random()*0.2
+        
+        # intialize random weight array (len(sensor neurons) * len(mneurons))
+        self.genome = np.random.random(size=(12, 4))
+        
         self.fitness = 0
     
     def Start_Evaluation(self, env, pb=True, pp=True):
@@ -22,7 +25,7 @@ class INDIVIDUAL:
         self.sim = pyrosim.Simulator(eval_time=c.evalTime, play_blind=pb, play_paused=pp, xyz=[0, 7.5, 0.8], hpr=[270,0,0.0])
         
         # add robot to sim
-        self.robot = ROBOT(self.sim, self.genome)
+        self.robot = ROBOT(self.sim, genome = self.genome)
         
         # add environment to sim
         env.Send_To(sim = self.sim)
@@ -103,7 +106,7 @@ class INDIVIDUAL:
 
     def Best_Keeper(self,x,y,z,penalty,t_data):
         not_conceding_score = 1
-        save_reward = 10
+        save_reward = 1000
 
         # check if the robot collided with the ball
         collision_detected = 1 if np.sum(t_data) > 0 else 0 
@@ -117,7 +120,7 @@ class INDIVIDUAL:
         
         if goal_saved_distance > 0 :
             # reward for saving the goal 
-            return save_reward * goal_saved_distance 
+            return save_reward
 
         elif goals_saved == 1:
             # reward for not conceding a goal even though by chance
@@ -125,15 +128,18 @@ class INDIVIDUAL:
 
         else:
             # punish for conceding a goal
-            return -1 *np.abs(distance_travelled)
+            return 0 *np.abs(distance_travelled)
         
     def Mutate(self):
         
         # mutation function
         # edit the genome to 
-        self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome/5))), 0.5)
-        print(self.genome)
         
+        for row_idx, row in enumerate(self.genome):
+            for col_idx, col in enumerate(row):
+                self.genome[row_idx, col_idx] = random.gauss(0,100)
+                #self.genome[row_idx, col_idx] = random.gauss(self.genome[row_idx, col_idx], math.fabs(self.genome[row_idx, col_idx]) )
+        print(self.genome)
         
     def Print(self):
         print('[', self.ID, ':', self.fitness, end=']')
