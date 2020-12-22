@@ -132,7 +132,7 @@ class INDIVIDUAL:
         # mutation function
         # edit the genome to 
         self.genome = min(math.fabs(random.gauss(self.genome, math.fabs(self.genome/5))), 0.5)
-        print(self.genome)
+        # print(self.genome)
         
         
     def Print(self):

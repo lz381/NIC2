@@ -130,7 +130,7 @@ class ROBOT:
             mneurons[i] = sim.send_motor_neuron(axles[i])
             sim.send_synapse(bias, mneurons[i], weight=random2())
                
-        #### Example Video www.youtube.com/watch?v=GcWJXxrKNk
+        #### Example Video www.youtube.com/watch?v=GcWJXxrKNk - video unavailable? 
         
         # ray sensors spaced Pi/6 radians apart.
         R1 = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=0,r3=0)
@@ -152,7 +152,7 @@ class ROBOT:
         
         # print(f' Surface Area is {Surface_Area}.')
         
-        # create a sensor to detect the collision between the ball and robot
+        # create a sensor to detect the collision between the ball and robot - do we need this if we just assign the robot to collision group?
         self.tsensor_id = sim.send_touch_sensor(body_id = box)
         self.position = sim.send_position_sensor(body_id = box)
 

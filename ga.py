@@ -24,7 +24,7 @@ for i in range(c.numGens):
     parents = children
 
 # visual check of last gen population
-parents.Evaluate(envs=envs, pb=False)
+parents.Evaluate(envs=envs, pb=True)
 
 
 
