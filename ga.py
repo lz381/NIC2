@@ -6,6 +6,7 @@ import pickle
 
 # This is the generations that will be recorded, just went for 1/4*numGens
 instant_replay = [1, round(c.numGens/4), round(c.numGens/2), round((c.numGens/4)*3), c.numGens-1]
+print(instant_replay)
 count = 0
 
 
@@ -42,6 +43,7 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
             filename = "RobotReplayGen_" + str(count) + ".p"
             with open(filename, "wb") as f:
                 pickle.dump(parents.p[0], f)
+            count += 1
 
         # Start of actual GA
         children = POPULATION(popsize=c.popSize)
