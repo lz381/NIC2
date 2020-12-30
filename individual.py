@@ -5,6 +5,9 @@ import math
 import numpy as np
 import constants as c
 
+random.seed(42)
+np.random.seed(42)
+
 class INDIVIDUAL:
     """
     Individual robot simulation.
@@ -15,7 +18,7 @@ class INDIVIDUAL:
         self.ball_psensor_id = 0
         
         # intialize random weight array (len(sensor neurons) * len(mneurons))
-        self.genome = np.random.random(size=(12, 4))
+        self.genome = np.random.random(size=(12, 4))*200-100
         
         self.fitness = 0
     
@@ -131,14 +134,15 @@ class INDIVIDUAL:
             return 0 *np.abs(distance_travelled)
         
     def Mutate(self):
-        
-        # mutation function
-        # edit the genome to 
-        
+
         for row_idx, row in enumerate(self.genome):
             for col_idx, col in enumerate(row):
-                self.genome[row_idx, col_idx] = random.gauss(0,100)
-                #self.genome[row_idx, col_idx] = random.gauss(self.genome[row_idx, col_idx], math.fabs(self.genome[row_idx, col_idx]) )
+                chance = random.random()*100
+                if chance < c.mutRate:
+                    self.genome[row_idx, col_idx] = random.uniform(-100, 100)
+                else:
+                    pass
+                
         print(self.genome)
         
     def Print(self):
