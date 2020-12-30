@@ -5,6 +5,9 @@ import numpy as np
 import random
 import math
 
+random.seed(42)
+np.random.seed(42)
+
 
 # create a random func that will return either True or False (Bool logic)
 def random_bool():               

@@ -2,6 +2,9 @@ from individual import INDIVIDUAL
 import copy
 import numpy as np
 
+
+np.random.seed(42)
+
 class POPULATION:
     """
     Population of individual robot simulations.
