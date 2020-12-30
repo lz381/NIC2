@@ -134,30 +134,15 @@ class INDIVIDUAL:
             return 0 *np.abs(distance_travelled)
         
     def Mutate(self):
-               
-        # rowtoMutate = random.randint(0, 11)
-        # coltoMutate = random.randint(0, 3)
-        # nv = random.gauss(self.genome[rowtoMutate][coltoMutate], math.fabs(self.genome[rowtoMutate][coltoMutate]))
-        # nv = math.tanh(nv)/(math.pi/2)
-        # if nv > 1:
-        #     nv = 1
-        #     self.genome[rowtoMutate][coltoMutate] = nv
-        # elif nv < -1:
-        #     nv = -1
-        #     self.genome[rowtoMutate][coltoMutate] = nv
-        # else:
-        # self.genome[rowtoMutate][coltoMutate] = nv
+
         for row_idx, row in enumerate(self.genome):
             for col_idx, col in enumerate(row):
                 chance = random.random()*100
                 if chance < c.mutRate:
-                    # self.genome[row_idx, col_idx] = random.gauss(self.genome[row_idx, col_idx], 1)
-                    # self.genome[row_idx, col_idx] = random.gauss(self.genome[row_idx, col_idx], math.fabs(self.genome[row_idx, col_idx]) )
                     self.genome[row_idx, col_idx] = random.uniform(-100, 100)
                 else:
                     pass
-                # self.genome[row_idx, col_idx] = random.gauss(0,100)
-                # self.genome[row_idx, col_idx] = random.gauss(self.genome[row_idx, col_idx], math.fabs(self.genome[row_idx, col_idx]) )
+                
         print(self.genome)
         
     def Print(self):
