@@ -15,13 +15,16 @@ class ENVIRONMENT:
         goal_height = 2
         supportLength = 0.5
         postRad = 0.05
+        avoid_sensor_offset = 0.5
         
         # goalpost object
-        left_post = sim.send_cylinder(x=goal_width/2, y=0, z=goal_height/2+postRad, length=goal_height, radius=postRad, collision_group = 'goalpost', mass=999)
-        right_post = sim.send_cylinder(x=-goal_width/2, y=0, z=goal_height/2+postRad, length=goal_height, radius=postRad, collision_group = 'goalpost', mass=999)
-        crossbar = sim.send_cylinder(x=0, y=0, z=goal_height+postRad, r1=1, r2=0, r3=0, length=goal_width, radius=postRad, collision_group = 'goalpost', mass=999)
-        leftSupport = sim.send_cylinder(x=goal_width/2, y=-supportLength/2, z=postRad, r1=0, r2=1, r3=0, length=supportLength, radius=postRad, collision_group='goalpost', mass=999)
-        rightSupport = sim.send_cylinder(x=-goal_width/2, y=-supportLength/2, z=postRad, r1=0, r2=1, r3=0, length=supportLength, radius=postRad, collision_group='goalpost', mass=999)
+        left_post = sim.send_cylinder(x=goal_width/2, y=0, z=goal_height/2+postRad+avoid_sensor_offset, length=goal_height, radius=postRad, collision_group = 'goalpost', mass=999)
+        right_post = sim.send_cylinder(x=-goal_width/2, y=0, z=goal_height/2+postRad+avoid_sensor_offset, length=goal_height, radius=postRad, collision_group = 'goalpost', mass=999)
+        crossbar = sim.send_cylinder(x=0, y=0, z=goal_height+postRad+avoid_sensor_offset, r1=1, r2=0, r3=0, length=goal_width, radius=postRad, collision_group = 'goalpost', mass=999)
+        leftSupport = sim.send_cylinder(x=goal_width/2, y=--100, z=postRad, r1=0, r2=1, r3=0, length=supportLength, radius=postRad, collision_group='goalpost', mass=999)
+        rightSupport = sim.send_cylinder(x=-goal_width/2, y=-100, z=postRad, r1=0, r2=1, r3=0, length=supportLength, radius=postRad, collision_group='goalpost', mass=999)
+        
+        
         sim.send_fixed_joint(left_post, crossbar)
         sim.send_fixed_joint(right_post, crossbar)
         sim.send_fixed_joint(leftSupport, left_post)
