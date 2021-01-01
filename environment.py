@@ -8,8 +8,6 @@ class ENVIRONMENT:
         self.ball_z = self.ball_radius
         self.ball_psensor_id = 0
         
-        
-        
     def Send_To(self, sim):
         
         # goalpost params
@@ -50,6 +48,35 @@ class ENVIRONMENT:
             ball = sim.send_sphere(x=-0, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
             sim.send_external_force(ball, x=-24, y=-60, z=30, time=5)
 
+        # Fifth Shot
+        if self.ID == 4:
+            ball = sim.send_sphere(x=0, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
+            sim.send_external_force(ball, x=-4, y=-12, z=0, time=5)
+            
+        #Sixth Shot
+        if self.ID == 5:
+            ball = sim.send_sphere(x=0, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
+            sim.send_external_force(ball, x=4, y=-12, z=0, time=5)
+        
+        # Seventh Shot
+        if self.ID == 6:
+            ball = sim.send_sphere(x=-2.5, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
+            sim.send_external_force(ball, x=8, y=-12, z=0, time=5)
+
+        # Eighth shot
+        if self.ID == 7:
+            ball = sim.send_sphere(x=2.5, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
+            sim.send_external_force(ball, x=-8, y=-12, z=0, time=5)
+
+        # Nineth shot
+        if self.ID == 8:
+            ball = sim.send_sphere(x=-2.5, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
+            sim.send_external_force(ball, x=4, y=-12, z=0, time=5)
+
+        # Tenth Shot
+        if self.ID == 9:
+            ball = sim.send_sphere(x=2.5, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
+            sim.send_external_force(ball, x=-4, y=-12, z=0, time=5)
                 
         # retrieve the position sensor id for the ball
         self.ball_psensor_id = sim.send_position_sensor(body_id = ball)
