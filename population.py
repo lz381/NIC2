@@ -45,6 +45,16 @@ class POPULATION:
         for i in self.p:
             self.p[i].fitness = self.p[i].fitness / len(envs.envs)
             
+    def Evaluate_Winner(self, envs, pb=False):
+        for e in envs.envs:
+            self.p[0].Start_Evaluation(env=envs.envs[e], pb=False)
+            
+            self.p[0].Compute_Fitness(metric="best_keeper")
+            
+        self.p[0].fitness = self.p[0].fitness / len(envs.envs)
+        print("\nFinal Fitness of Winner: ", self.p[0].fitness)
+            
+            
     def Initialize(self):
         
         # generate random population of individuals

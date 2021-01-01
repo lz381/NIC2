@@ -55,8 +55,8 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
         children.Print()
         parents = children
 
-# visual check of last gen population
-parents.Evaluate(envs=envs, pb=False)
+# visual check of winner
+parents.Evaluate_Winner(envs=envs)
 
 
 
