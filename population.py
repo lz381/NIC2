@@ -1,9 +1,8 @@
 from individual import INDIVIDUAL
 import copy
 import numpy as np
+import constants as c
 
-
-np.random.seed(42)
 
 class POPULATION:
     """
@@ -37,23 +36,28 @@ class POPULATION:
                 
             # compute fitness of each individual in population
             for i in self.p:
-                #self.p[i].Compute_Fitness(metric="goals_scored")
-                #self.p[i].Compute_Fitness(metric="distance_travelled")
-                self.p[i].Compute_Fitness(metric="best_keeper")
+                self.p[i].Compute_Fitness(metric=c.fitnessMetric)
         
         # final fitness is average fitness over number of environments
         for i in self.p:
             self.p[i].fitness = self.p[i].fitness / len(envs.envs)
             
     def Evaluate_Winner(self, envs, pb=False):
+
+        # with the elitism size > 1, winner could be any one of the first few in the population(coz of implementation)
+        # hence finding the winner individual first
+        a = []
+        for i in self.p:
+            a.append(self.p[i].fitness)
+        a = np.array(a)
+        best_individual_ind = np.argpartition(a, 1)[-1:]  # get the index of winner
+
         for e in envs.envs:
-            self.p[0].Start_Evaluation(env=envs.envs[e], pb=False)
-            
-            self.p[0].Compute_Fitness(metric="best_keeper")
-            
-        self.p[0].fitness = self.p[0].fitness / len(envs.envs)
-        print("\nFinal Fitness of Winner: ", self.p[0].fitness)
-            
+            # evaluate winner individual in population for visual
+            self.p[best_individual_ind[0]].Start_Evaluation(env=envs.envs[e], pb=pb)
+            self.p[best_individual_ind[0]].sim.wait_to_finish()
+        # fitness is already computed
+        print("\n Fitness of Winner from last generation: ", self.p[best_individual_ind[0]].fitness)
             
     def Initialize(self):
         
@@ -65,31 +69,26 @@ class POPULATION:
         for i in range(0, self.popsize):
             self.p[i].Mutate()
             
-    def Copy_Best_From(self, other):
+    def Copy_Best_From(self, other, elite_size):
         
         # ELITISM - select best solution from parent pop (other) to include in children population
-        best_fitness = 0
-        best_individual_index = 0
-        
+        # ELITISM - elite_size to decide the no of best solutions to be copied in children generation
+        a = []
         for i in other.p:
-            fitness = other.p[i].fitness
-            
-            if fitness >= best_fitness:
-                best_fitness = fitness
-                best_individual_index = i
-        
-        best_individual = copy.deepcopy(other.p[best_individual_index])
-        
-        self.p[0] = best_individual        
-    
-    
-    def Collect_Children_From(self, other):
+            a.append(other.p[i].fitness)
+        a = np.array(a)
+        best_individual_ind = np.argpartition(a, elite_size)[-elite_size:]
+
+        for i, idx in enumerate(best_individual_ind):
+            self.p[i] = copy.deepcopy(other.p[idx])
+
+    def Collect_Children_From(self, other, elite_size):
         
         # fill other solutions with mutated children
         
         for i in other.p:
-            # skip first solution (as this is best solution copied from parents for elitism)
-            if i == 0:
+            # skip first few best solutions (as these are few best solutions copied from parents for elitism)
+            if i in range(0, elite_size):
                 continue
             
             # tournament selection to select children to mutate and store
@@ -100,11 +99,11 @@ class POPULATION:
             self.p[i] = copy.deepcopy(winner)
            
     def Fill_From(self, other):
-        # elitism
-        self.Copy_Best_From(other)
+        # elitism : elitism_rate to decide the no of best solutions to be copied in children generation
+        elite_size = int(self.popsize * c.elitismRate / 100)
+        self.Copy_Best_From(other, elite_size)
         # selection and mutation
-        self.Collect_Children_From(other)
-        
+        self.Collect_Children_From(other, elite_size)
 
     def Tournament_Selection(other):
         

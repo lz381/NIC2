@@ -3,6 +3,8 @@ from environments import ENVIRONMENTS
 import constants as c
 import csv
 import pickle
+import random
+import numpy as np
 
 # This is the generations that will be recorded, just went for 1/4*numGens
 instant_replay = [1, round(c.numGens/4), round(c.numGens/2), round((c.numGens/4)*3), c.numGens-1]
@@ -20,6 +22,10 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
     writer.writerow(header)
  
     envs = ENVIRONMENTS()
+
+    # setting the random seed
+    np.random.seed(c.randomSeed)
+    random.seed(c.randomSeed)
 
     # generate intial population
     parents = POPULATION(popsize=c.popSize)
@@ -57,8 +63,6 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
 
 # visual check of winner
 parents.Evaluate_Winner(envs=envs)
-
-
 
 
 

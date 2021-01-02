@@ -16,7 +16,8 @@ class INDIVIDUAL:
         
         self.ID = i
         self.ball_psensor_id = 0
-        
+        self.robot_position = 0
+
         # intialize random weight array (len(sensor neurons) * len(mneurons))
         self.genome = np.random.random(size=(12, 4))*200-100
         
@@ -41,6 +42,8 @@ class INDIVIDUAL:
         self.sim.start()
         # retrieve the id of the ball position sensor
         self.ball_psensor_id = env.ball_psensor_id
+        self.robot_position = self.robot.position
+
 
     def Compute_Fitness(self,metric = "goals_scored"):
         self.sim.wait_to_finish()
@@ -64,6 +67,9 @@ class INDIVIDUAL:
             #returns 1 when a collision is detected and 0 otherwise
             t_data = self.sim.get_sensor_data(sensor_id = self.robot.tsensor_id ) 
             self.fitness += self.Best_Keeper(sphere_position_x, sphere_position_y, sphere_position_z, penalty, t_data)
+
+        elif metric == "reward_efforts":
+            self.fitness += self.reward_efforts(sphere_position_x, sphere_position_y, sphere_position_z)
 
         del self.sim
 
@@ -132,17 +138,66 @@ class INDIVIDUAL:
         else:
             # punish for conceding a goal
             return 0 *np.abs(distance_travelled)
+
+    def reward_efforts(self, sphere_position_x, sphere_position_y, sphere_position_z):
+        """It takes into consideration the distance between robot and ball at the time step when ball is just crossing
+        the goal post(in case of goal success). Smaller is this distance,more will be the reward and higher will be the fitness.
+        When the goal is saved, fitness is simply the twice of goal width, which is the highest."""
+        fitness = 0
+        ball_radius = 0.16
+        goal_post_y = 0
+        goal_width = 5
+        goal_height = 2
+
+        # x, y and z position of the robot
+        robot_position_x = self.sim.get_sensor_data(sensor_id=self.robot_position, svi=0)
+        robot_position_y = self.sim.get_sensor_data(sensor_id=self.robot_position, svi=1)
+        robot_position_z = self.sim.get_sensor_data(sensor_id=self.robot_position, svi=2)
+
+        # mask for when the ball has crossed the goal post line
+        y_cross_mask = sphere_position_y < (goal_post_y + (-1 * ball_radius))
+
+        # mask for when the ball is within the goal_height
+        # z_cross_mask = (z >= ball_radius) & (z< (goal_height - ball_radius) ) # todo excluding the flying shot for now
+
+        # mask for when the ball has crossed within goal post
+        valid_mask = y_cross_mask
+
+        # returns 1 if a goal was saved during that event or 0 otherwise
+        goal_saved = False if np.sum(valid_mask) > 0 else True
+        if goal_saved:
+            fitness = 2 * goal_width
+        else:  # calculate the distance between car and ball at the time step when ball is just crossing the goal post
+            timestep_idx = len(y_cross_mask) - np.sum(y_cross_mask)
+            distance_x = (robot_position_x[timestep_idx] - sphere_position_x[timestep_idx])**2
+            distance_y = (robot_position_y[timestep_idx] - sphere_position_y[timestep_idx]) ** 2
+            distance_z = (robot_position_z[timestep_idx] - sphere_position_z[timestep_idx]) ** 2
+            # subtract this distance from the goal width to reward
+            fitness = goal_width - np.sqrt(distance_x + distance_y + distance_z)
+
+        return fitness
         
     def Mutate(self):
 
-        for row_idx, row in enumerate(self.genome):
-            for col_idx, col in enumerate(row):
-                chance = random.random()*100
-                if chance < c.mutRate:
-                    self.genome[row_idx, col_idx] = random.uniform(-100, 100)
-                else:
-                    pass
-                
+        if not c.vectorized_mutation:
+            for row_idx, row in enumerate(self.genome):
+                for col_idx, col in enumerate(row):
+                    chance = random.random()*100
+                    if chance < c.mutRate:
+                        self.genome[row_idx, col_idx] = random.uniform(-100, 100)
+                    else:
+                        pass
+        # introducing the numpy vectorization for faster computation when muteRate is higher
+        else:
+            genome_copy = self.genome.copy()
+            self.genome = self.genome.reshape(genome_copy.size)
+            m = int(c.mutRate*c.popSize/100)
+            # sampling the m indices from the solution without replacement
+            idx = random.sample(range(len(self.genome)), k=m)
+            self.genome[idx] = [random.uniform(-100, 100) for i in idx]
+            # self.genome[idx] = [random.gauss(self.genome[i], math.fabs(self.genome[i])) for i in idx]
+            self.genome = self.genome.reshape(*genome_copy.shape)
+
         print(self.genome)
         
     def Print(self):
