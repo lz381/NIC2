@@ -51,7 +51,7 @@ class POPULATION:
         for i in self.p:
             a.append(self.p[i].fitness)
         a = np.array(a)
-        best_individual_ind = np.argpartition(a, 1)[-1:]  # get the index of winner
+        best_individual_ind = np.argpartition(a, -1)[-1:]  # get the index of winner
 
         for e in envs.envs:
             # evaluate winner individual in population for visual
@@ -78,7 +78,7 @@ class POPULATION:
         for i in other.p:
             a.append(other.p[i].fitness)
         a = np.array(a)
-        best_individual_ind = np.argpartition(a, elite_size)[-elite_size:]
+        best_individual_ind = np.argpartition(a, -elite_size)[-elite_size:]
 
         for i, idx in enumerate(best_individual_ind):
             self.p[i] = copy.deepcopy(other.p[idx])
