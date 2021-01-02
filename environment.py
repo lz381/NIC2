@@ -49,7 +49,7 @@ class ENVIRONMENT:
         # for jumping robots?
         if self.ID == 3:
             ball = sim.send_sphere(x=-0, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
-            sim.send_external_force(ball, x=-24, y=-60, z=30, time=5)
+            sim.send_external_force(ball, x=-6, y=-10, z=0, time=5)
 
         # Fifth Shot
         if self.ID == 4:
