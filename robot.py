@@ -20,15 +20,13 @@ def random_Wheel():
 # create a random number between -1 and 1 using the random module with uniform dist
 def random2():               
     return random.uniform(-1,1)
-    
+
 class ROBOT:
     """
     Robot blueprints.
     """
-    def __init__(self, sim, genome):
+    def __init__(self, sim, genome,WHEEL_RADIUS,SPEED,MASS):
                
-        WHEEL_RADIUS = 0.1
-        SPEED = 30
         Number_of_Wheels = 4
         # create a list for each Wheel.
         wheels = [0] * Number_of_Wheels
@@ -73,7 +71,7 @@ class ROBOT:
         # Create a Red Car Body.
         box = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= Len_Car*2 *
                            WHEEL_RADIUS, width=4 * WHEEL_RADIUS, height=WHEEL_RADIUS,
-                           mass=10,r=1, g=0, b=0, collision_group = 'robot')
+                           mass=MASS,r=1, g=0, b=0, collision_group = 'robot')
                            
         # create the pole for the car to attach to
         box2 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS*2, length= Len_Car*2 *
