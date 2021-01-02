@@ -5,6 +5,8 @@ import math
 import numpy as np
 import constants as c
 
+random.seed(c.randomSeed)
+np.random.seed(c.randomSeed)
 
 class INDIVIDUAL:
     """
