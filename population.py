@@ -3,6 +3,7 @@ import copy
 import numpy as np
 import constants as c
 
+np.random.seed(c.randomSeed)
 
 class POPULATION:
     """
