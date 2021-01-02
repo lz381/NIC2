@@ -5,8 +5,6 @@ import math
 import numpy as np
 import constants as c
 
-random.seed(42)
-np.random.seed(42)
 
 class INDIVIDUAL:
     """
@@ -20,6 +18,9 @@ class INDIVIDUAL:
 
         # intialize random weight array (len(sensor neurons) * len(mneurons))
         self.genome = np.random.random(size=(12, 4))*200-100
+        self.WHEEL_RADIUS = 0.05
+        self.SPEED = 5
+        self.MASS = 25
         
         self.fitness = 0
     
@@ -29,8 +30,8 @@ class INDIVIDUAL:
         self.sim = pyrosim.Simulator(eval_time=c.evalTime, play_blind=pb, play_paused=pp, xyz=[0, 7.5, 0.8], hpr=[270,0,0.0])
         
         # add robot to sim
-        self.robot = ROBOT(self.sim, genome = self.genome)
-        
+        self.robot = ROBOT(self.sim,genome = self.genome, WHEEL_RADIUS = self.WHEEL_RADIUS, SPEED=self.SPEED, MASS=self.MASS)
+       
         # add environment to sim
         env.Send_To(sim = self.sim)
         
@@ -178,7 +179,9 @@ class INDIVIDUAL:
         return fitness
         
     def Mutate(self):
-
+        self.WHEEL_RADIUS = np.random.randint(5,20,size=1)[0]/100
+        self.SPEED = np.random.randint(5,40,size=1)[0]
+        self.MASS = np.random.randint(10,100,size=1)[0]
         if not c.vectorized_mutation:
             for row_idx, row in enumerate(self.genome):
                 for col_idx, col in enumerate(row):
