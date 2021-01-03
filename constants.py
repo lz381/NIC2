@@ -1,7 +1,7 @@
 evalTime = 500
 popSize = 10
-numGens = 1000
-numEnvs = 3
+numGens = 20
+numEnvs = 10
 vectorized_mutation = True
 mutRate = 30    # Expressed as a percentage
 elitismRate = 50  # Expressed as a percentage

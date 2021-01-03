@@ -51,14 +51,14 @@ class POPULATION:
         for i in self.p:
             a.append(self.p[i].fitness)
         a = np.array(a)
-        best_individual_ind = np.argpartition(a, -1)[-1:]  # get the index of winner
+        best_individual_ind = np.argmax(a)  # get the index of winner
 
         for e in envs.envs:
             # evaluate winner individual in population for visual
-            self.p[best_individual_ind[0]].Start_Evaluation(env=envs.envs[e], pb=pb)
-            self.p[best_individual_ind[0]].sim.wait_to_finish()
+            self.p[best_individual_ind].Start_Evaluation(env=envs.envs[e], pb=pb)
+            self.p[best_individual_ind].sim.wait_to_finish()
         # fitness is already computed
-        print("\n Fitness of Winner from last generation: ", self.p[best_individual_ind[0]].fitness)
+        print("\n Fitness of Winner from last generation: ", self.p[best_individual_ind].fitness)
             
     def Initialize(self):
         
