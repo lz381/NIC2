@@ -44,11 +44,12 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
             line.append(parents.p[j].fitness)
         writer.writerow(line)    
 
-        # If the gen number is right, then it saves the replay
+        # If the gen number is right, then it saves the replay of the best individual in the that generation
         if i in instant_replay:
             filename = "RobotReplayGen_" + str(i) + ".p"
+            best_of_gen = parents.find_winner()
             with open(filename, "wb") as f:
-                pickle.dump(parents.p[0], f)
+                pickle.dump(best_of_gen, f)
 
 
         # Start of actual GA
@@ -63,7 +64,6 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
 
 # visual check of winner
 parents.Evaluate_Winner(envs=envs)
-
 
 
 
