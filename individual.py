@@ -24,9 +24,6 @@ class INDIVIDUAL:
         self.SPEED = 5
         self.MASS = 25
         
-        # intialize weights of hidden genome
-        self.hidden_genome = np.random.random(size=(12, 12))*0.5  - 0.25
-        
         self.fitness = 0
     
     def Start_Evaluation(self, env, pb=True, pp=True):
@@ -35,13 +32,8 @@ class INDIVIDUAL:
         self.sim = pyrosim.Simulator(eval_time=c.evalTime, play_blind=pb, play_paused=pp, xyz=[0, 7.5, 0.8], hpr=[270,0,0.0])
         
         # add robot to sim
-<<<<<<< Updated upstream
         self.robot = ROBOT(self.sim,genome = self.genome, WHEEL_RADIUS = self.WHEEL_RADIUS, SPEED=self.SPEED, MASS=self.MASS)
        
-=======
-        self.robot = ROBOT(self.sim, genome = self.genome, hidden_genome=self.hidden_genome)
-        
->>>>>>> Stashed changes
         # add environment to sim
         env.Send_To(sim = self.sim)
         
@@ -211,27 +203,7 @@ class INDIVIDUAL:
             # self.genome[idx] = [random.gauss(self.genome[i], math.fabs(self.genome[i])) for i in idx]
             self.genome = self.genome.reshape(*genome_copy.shape)
 
-<<<<<<< Updated upstream
         print(self.genome)
-=======
-        for row_idx, row in enumerate(self.genome):
-            
-            for col_idx, col in enumerate(row):
-                chance = random.random()*100
-                if chance < c.mutRate:
-                    self.genome[row_idx, col_idx] = random.uniform(-100, 100)
-                
-                else:
-                    pass
-                
-        for row_idx, row in enumerate(self.hidden_genome):
-            for col_idx, col in enumerate(row):
-                chance = random.random()*100
-                if chance < c.mutRate:
-                    self.hidden_genome[row_idx, col_idx] = np.random.random() * 2 - 1
-                                                                            
-        # print(self.genome)
->>>>>>> Stashed changes
         
     def Print(self):
         print('[', self.ID, ':', self.fitness, end=']')
