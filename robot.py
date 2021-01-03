@@ -25,7 +25,11 @@ class ROBOT:
     """
     Robot blueprints.
     """
+<<<<<<< Updated upstream
     def __init__(self, sim, genome,WHEEL_RADIUS,SPEED,MASS):
+=======
+    def __init__(self, sim, genome, hidden_genome):
+>>>>>>> Stashed changes
                
         Number_of_Wheels = 4
         # create a list for each Wheel.
@@ -142,6 +146,21 @@ class ROBOT:
         for i, s in (raySensors.items()):
             sensorNeurons[i] = sim.send_sensor_neuron(s)
             
+            
+        
+        
+        hiddenNeurons = {}
+        numHiddenNeurons = 12
+        for i in range(numHiddenNeurons):
+            hiddenNeurons[i] = sim.send_hidden_neuron()
+        
+        self.hidden_weights = hidden_genome
+        
+        # connect sensor neurons to hidden neurons
+        for hidden_weight_i, s in sensorNeurons.items():
+            for hidden_weight_j, h in hiddenNeurons.items():
+                sim.send_synapse(s, h, weight=self.hidden_weights[hidden_weight_i, hidden_weight_j])
+            
         # motor neurons
         mneurons = [0] * Number_of_Wheels
         for i in range(Number_of_Wheels):
@@ -149,13 +168,13 @@ class ROBOT:
             #sim.send_synapse(bias, mneurons[i], weight=random2())
         
         # weight matrix
-        
         self.weight_array= genome
         
-        # connect sensor neurons to motor neurons
-        for weight_i, s in (sensorNeurons.items()):
+        # connect hidden neurons to motor neurons
+        #for weight_i, s in (sensorNeurons.items()):
+        for weight_i, h in hiddenNeurons.items():
             for weight_j, m in enumerate(mneurons):
-                sim.send_synapse(s, m, weight = self.weight_array[weight_i, weight_j])
+                sim.send_synapse(h, m, weight = self.weight_array[weight_i, weight_j])
         
         
         # Can set surface area to a constraint
