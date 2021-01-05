@@ -19,7 +19,7 @@ class INDIVIDUAL:
         self.robot_position = 0
         
         numHiddenNeurons = 24
-        numHiddenNeurons2 = 24
+        # numHiddenNeurons2 = 24
         
         # intialize random weight array (len(sensor neurons) * len(mneurons))
         self.genome = np.random.random(size=(numHiddenNeurons2, 4))*200-100
