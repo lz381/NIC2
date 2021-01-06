@@ -22,8 +22,12 @@ class INDIVIDUAL:
         # numHiddenNeurons2 = 24
         
         # intialize random weight array (len(sensor neurons) * len(mneurons))
-        self.genome = np.random.random(size=(c.numHiddenNeurons, 4))*200-100
+        # genome: sensors to hidden layer
         self.hidden_genome = np.random.random(size=(12, c.numHiddenNeurons)) * 200  - 100
+        
+        # genome: hidden layer to output
+        self.genome = np.random.random(size=(c.numHiddenNeurons, 4))*200-100
+        
         #self.hidden_genome2 = np.random.random(size=(numHiddenNeurons, numHiddenNeurons2)) * 200  - 100
         
         self.WHEEL_RADIUS = 0.05
@@ -31,6 +35,8 @@ class INDIVIDUAL:
         self.MASS = 25
         
         self.fitness = 0
+        
+        self.adaptiveMutRate = c.mutRate
     
     def Start_Evaluation(self, env, pb=True, pp=True):
         
@@ -195,14 +201,14 @@ class INDIVIDUAL:
     def Mutate(self):
         self.WHEEL_RADIUS = np.random.randint(5,15,size=1)[0]/100
         self.SPEED = np.random.randint(5,30,size=1)[0]
-        self.MASS = 100
+        self.MASS = np.random.randint(80,120,size=1)[0]
         
         # genome mutation
         if not c.vectorized_mutation:
             for row_idx, row in enumerate(self.genome):
                 for col_idx, col in enumerate(row):
                     chance = random.random()*100
-                    if chance < c.mutRate:
+                    if chance < self.adaptiveMutRate:
                         self.genome[row_idx, col_idx] = random.uniform(-100, 100)
                     else:
                         pass
@@ -210,7 +216,7 @@ class INDIVIDUAL:
         else:
             genome_copy = self.genome.copy()
             self.genome = self.genome.reshape(genome_copy.size)
-            m = int(c.mutRate*c.popSize/100)
+            m = int(self.adaptiveMutRate*c.popSize/100)
             # sampling the m indices from the solution without replacement
             idx = random.sample(range(len(self.genome)), k=m)
             self.genome[idx] = [random.uniform(-100, 100) for i in idx]
@@ -222,7 +228,7 @@ class INDIVIDUAL:
         for row_idx, row in enumerate(self.hidden_genome):
             for col_idx, col in enumerate(row):
                 chance = random.random()*100
-                if chance < c.mutRate:
+                if chance < self.adaptiveMutRate:
                     self.hidden_genome[row_idx, col_idx] = np.random.random() * 200 - 100
         
         # for row_idx, row in enumerate(self.hidden_genome2):
@@ -234,6 +240,12 @@ class INDIVIDUAL:
         
         #print(self.genome)
         
+        # adaptive mutation
+        
+        if c.adaptive_mutation_enabled:
+            rechenberg_constant = 1.3
+            xi = np.random.uniform(1/rechenberg_constant, rechenberg_constant)
+            self.adaptiveMutRate = self.adaptiveMutRate * xi
         
         
     def Crossover(self, other):
