@@ -44,22 +44,28 @@ class POPULATION:
             self.p[i].fitness = self.p[i].fitness / len(envs.envs)
             
     def Evaluate_Winner(self, envs, pb=False):
+        # get the winner
+        winner = self.find_winner()
 
+        for e in envs.envs:
+            # evaluate winner individual in population for visual
+            winner.Start_Evaluation(env=envs.envs[e], pb=pb)
+            winner.sim.wait_to_finish()
+        # fitness is already computed
+        print("\n Fitness of Winner from last generation: ", winner.fitness)
+
+    def find_winner(self):
         # with the elitism size > 1, winner could be any one of the first few in the population(coz of implementation)
         # hence finding the winner individual first
         a = []
         for i in self.p:
             a.append(self.p[i].fitness)
         a = np.array(a)
-        best_individual_ind = np.argmax(a)  # get the index of winner
 
-        for e in envs.envs:
-            # evaluate winner individual in population for visual
-            self.p[best_individual_ind].Start_Evaluation(env=envs.envs[e], pb=pb)
-            self.p[best_individual_ind].sim.wait_to_finish()
-        # fitness is already computed
-        print("\n Fitness of Winner from last generation: ", self.p[best_individual_ind].fitness)
-            
+        best_individual_ind = np.argpartition(a, -1)[-1:]  # get the index of winner
+        
+        return self.p[best_individual_ind[0]]
+
     def Initialize(self):
         
         # generate random population of individuals
