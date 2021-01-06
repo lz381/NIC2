@@ -173,42 +173,42 @@ class ROBOT:
         raySensors = {}
                 
         # 1.00000000e-02,  0.00000000e+00]
-        raySensors[0] = sim.send_ray_sensor(body_id = post0, x=-0.01, y=0, z=1.5*WHEEL_RADIUS+rayOffset, r1=1, r2=0, r3=0)
+        raySensors[0] = sim.send_ray_sensor(body_id = post0, x=-0.01, y=0, z=1.5*WHEEL_RADIUS+rayOffset, r1=1, r2=0, r3=0, max_distance=20)
         
         # [ 8.66025404e-03,  5.00000000e-03],
-        raySensors[1] = sim.send_ray_sensor(body_id = post1, x=0.00866, y=0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.866, r2=0.5, r3=0) 
+        raySensors[1] = sim.send_ray_sensor(body_id = post1, x=0.00866, y=0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.866, r2=0.5, r3=0, max_distance=20) 
         
         
         # [ 5.00000000e-03,  8.66025404e-03],
-        raySensors[2] = sim.send_ray_sensor(body_id = post2, x=0.005, y=0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=0.866, r3=0) 
+        raySensors[2] = sim.send_ray_sensor(body_id = post2, x=0.005, y=0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=0.866, r3=0, max_distance=20) 
         
         
         # [ 1.73472348e-18,  1.00000000e-02],
-        raySensors[3] = sim.send_ray_sensor(body_id = post3, x=0, y=0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=1, r3=0) 
+        raySensors[3] = sim.send_ray_sensor(body_id = post3, x=0, y=0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=1, r3=0, max_distance=20) 
         
         # [-5.00000000e-03,  8.66025404e-03],
-        raySensors[4] = sim.send_ray_sensor(body_id = post4, x=0.005, y=0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=0, r3=0) 
+        raySensors[4] = sim.send_ray_sensor(body_id = post4, x=0.005, y=0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=0, r3=0, max_distance=20) 
        
         # [-8.66025404e-03,  5.00000000e-03],
-        raySensors[5] = sim.send_ray_sensor(body_id = post5, x=-0.00866, y=0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.866, r2=0.5, r3=0) 
+        raySensors[5] = sim.send_ray_sensor(body_id = post5, x=-0.00866, y=0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.866, r2=0.5, r3=0, max_distance=20) 
         
         # [-1.00000000e-02,  5.20417043e-18],
-        raySensors[6] = sim.send_ray_sensor(body_id = post6, x=-0.01, y=0, z=1.5*WHEEL_RADIUS+rayOffset, r1=-1, r2=0, r3=0) 
+        raySensors[6] = sim.send_ray_sensor(body_id = post6, x=-0.01, y=0, z=1.5*WHEEL_RADIUS+rayOffset, r1=-1, r2=0, r3=0, max_distance=20) 
         
         # [-8.66025404e-03, -5.00000000e-03],
-        raySensors[7] = sim.send_ray_sensor(body_id = post7, x=-0.00866, y=-0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.866, r2=-0.5, r3=0) 
+        raySensors[7] = sim.send_ray_sensor(body_id = post7, x=-0.00866, y=-0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.866, r2=-0.5, r3=0, max_distance=20) 
         
          # [-5.00000000e-03, -8.66025404e-03],
-        raySensors[8] = sim.send_ray_sensor(body_id = post8, x=-0.005, y=-0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.5, r2=-0.866, r3=0)
+        raySensors[8] = sim.send_ray_sensor(body_id = post8, x=-0.005, y=-0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.5, r2=-0.866, r3=0, max_distance=20)
         
          # [-8.67361738e-18, -1.00000000e-02],
-        raySensors[9] = sim.send_ray_sensor(body_id = post9, x=0, y=-0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=-1, r3=0) 
+        raySensors[9] = sim.send_ray_sensor(body_id = post9, x=0, y=-0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=-1, r3=0, max_distance=20) 
         
         # [ 5.00000000e-03, -8.66025404e-03],
-        raySensors[10] = sim.send_ray_sensor(body_id = post10, x=-0.005, y=-0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=-0.866, r3=0) 
+        raySensors[10] = sim.send_ray_sensor(body_id = post10, x=-0.005, y=-0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=-0.866, r3=0, max_distance=20) 
         
         # [ 8.66025404e-03, -5.00000000e-03]])
-        raySensors[11] = sim.send_ray_sensor(body_id = post11, x=-0.00866, y=-0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.866, r2=-0.5, r3=0)         
+        raySensors[11] = sim.send_ray_sensor(body_id = post11, x=-0.00866, y=-0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.866, r2=-0.5, r3=0, max_distance=20)         
         
         
         # add sensor neurons
