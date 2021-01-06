@@ -61,7 +61,9 @@ class POPULATION:
         for i in self.p:
             a.append(self.p[i].fitness)
         a = np.array(a)
+
         best_individual_ind = np.argpartition(a, -1)[-1:]  # get the index of winner
+        
         return self.p[best_individual_ind[0]]
 
     def Initialize(self):
@@ -98,6 +100,12 @@ class POPULATION:
             
             # tournament selection to select children to mutate and store
             winner = other.Tournament_Selection()
+            
+            # CROSSOVER
+            if c.crossover_enabled:
+                parent2 = other.Tournament_Selection()
+                # perform (single-sided) crossover
+                winner.Crossover(parent2)
             
             # MUTATION
             winner.Mutate()

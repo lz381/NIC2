@@ -17,14 +17,26 @@ class INDIVIDUAL:
         self.ID = i
         self.ball_psensor_id = 0
         self.robot_position = 0
-
+        
+        #numHiddenNeurons = 24
+        # numHiddenNeurons2 = 24
+        
         # intialize random weight array (len(sensor neurons) * len(mneurons))
-        self.genome = np.random.random(size=(12, 4))*200-100
+        # genome: sensors to hidden layer
+        self.hidden_genome = np.random.random(size=(12, c.numHiddenNeurons)) * 200  - 100
+        
+        # genome: hidden layer to output
+        self.genome = np.random.random(size=(c.numHiddenNeurons, 4))*200-100
+        
+        #self.hidden_genome2 = np.random.random(size=(numHiddenNeurons, numHiddenNeurons2)) * 200  - 100
+        
         self.WHEEL_RADIUS = 0.05
         self.SPEED = 5
         self.MASS = 25
         
         self.fitness = 0
+        
+        self.adaptiveMutRate = c.mutRate
     
     def Start_Evaluation(self, env, pb=True, pp=True):
         
@@ -32,7 +44,7 @@ class INDIVIDUAL:
         self.sim = pyrosim.Simulator(eval_time=c.evalTime, play_blind=pb, play_paused=pp, xyz=[0, 7.5, 0.8], hpr=[270,0,0.0])
         
         # add robot to sim
-        self.robot = ROBOT(self.sim,genome = self.genome, WHEEL_RADIUS = self.WHEEL_RADIUS, SPEED=self.SPEED, MASS=self.MASS)
+        self.robot = ROBOT(self.sim,genome = self.genome, hidden_genome = self.hidden_genome, WHEEL_RADIUS = self.WHEEL_RADIUS, SPEED=self.SPEED, MASS=self.MASS)
        
         # add environment to sim
         env.Send_To(sim = self.sim)
@@ -46,10 +58,16 @@ class INDIVIDUAL:
         # retrieve the id of the ball position sensor
         self.ball_psensor_id = env.ball_psensor_id
         self.robot_position = self.robot.position
+        
+        
 
 
     def Compute_Fitness(self,metric = "goals_scored"):
         self.sim.wait_to_finish()
+        
+        # for i in range(12):
+        #     print(self.sim.get_sensor_data(sensor_id=i)[:-10])
+        
         
         # current fitness function is the sum of fitness outputs over each environment
 
@@ -181,14 +199,16 @@ class INDIVIDUAL:
         return fitness
         
     def Mutate(self):
-        self.WHEEL_RADIUS = np.random.randint(5,20,size=1)[0]/100
-        self.SPEED = np.random.randint(5,40,size=1)[0]
-        self.MASS = np.random.randint(10,100,size=1)[0]
+        self.WHEEL_RADIUS = np.random.randint(5,15,size=1)[0]/100
+        self.SPEED = np.random.randint(5,30,size=1)[0]
+        self.MASS = np.random.randint(80,120,size=1)[0]
+        
+        # genome mutation
         if not c.vectorized_mutation:
             for row_idx, row in enumerate(self.genome):
                 for col_idx, col in enumerate(row):
                     chance = random.random()*100
-                    if chance < c.mutRate:
+                    if chance < self.adaptiveMutRate:
                         self.genome[row_idx, col_idx] = random.uniform(-100, 100)
                     else:
                         pass
@@ -196,14 +216,63 @@ class INDIVIDUAL:
         else:
             genome_copy = self.genome.copy()
             self.genome = self.genome.reshape(genome_copy.size)
-            m = int(c.mutRate*c.popSize/100)
+            m = int(self.adaptiveMutRate*c.popSize/100)
             # sampling the m indices from the solution without replacement
             idx = random.sample(range(len(self.genome)), k=m)
             self.genome[idx] = [random.uniform(-100, 100) for i in idx]
             # self.genome[idx] = [random.gauss(self.genome[i], math.fabs(self.genome[i])) for i in idx]
             self.genome = self.genome.reshape(*genome_copy.shape)
-
-        print(self.genome)
+        
+        
+        # hidden genome mutation - needs optimizing                
+        for row_idx, row in enumerate(self.hidden_genome):
+            for col_idx, col in enumerate(row):
+                chance = random.random()*100
+                if chance < self.adaptiveMutRate:
+                    self.hidden_genome[row_idx, col_idx] = np.random.random() * 200 - 100
+        
+        # for row_idx, row in enumerate(self.hidden_genome2):
+        #     for col_idx, col in enumerate(row):
+        #         chance = random.random()*100
+        #         if chance < c.mutRate:
+        #             self.hidden_genome2[row_idx, col_idx] = np.random.random() * 200 - 100
+        
+        
+        #print(self.genome)
+        
+        # adaptive mutation
+        
+        if c.adaptive_mutation_enabled:
+            rechenberg_constant = 1.3
+            xi = np.random.uniform(1/rechenberg_constant, rechenberg_constant)
+            self.adaptiveMutRate = self.adaptiveMutRate * xi
+        
+        
+    def Crossover(self, other):
+        
+        flat_parent1_genome = self.genome.flatten()
+        flat_parent2_genome = other.genome.flatten()
+        
+        # random crossover point
+        crossover_idx = np.random.randint(len(flat_parent1_genome))
+        crossover_idx2 = np.random.randint(crossover_idx, len(flat_parent1_genome))
+        
+        # swap genes
+        flat_parent1_genome[crossover_idx:crossover_idx2] = flat_parent2_genome[crossover_idx:crossover_idx2]
+        
+        # NB. produces only one child
+        self.genome = flat_parent1_genome.reshape(self.genome.shape)
+        
+        # do the same for other genome
+        flat_parent1_hidden_genome = self.hidden_genome.flatten()
+        flat_parent2_hidden_genome = other.hidden_genome.flatten()
+        flat_parent1_hidden_genome[crossover_idx:crossover_idx2] = flat_parent2_hidden_genome[crossover_idx:crossover_idx2]
+        self.hidden_genome = flat_parent1_hidden_genome.reshape(self.hidden_genome.shape)
+            
+            
+            
+            
+            
         
     def Print(self):
         print('[', self.ID, ':', self.fitness, end=']')

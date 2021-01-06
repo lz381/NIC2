@@ -4,6 +4,7 @@ import pyrosim # noqa
 import numpy as np
 import random
 import math
+import constants as c
 
 random.seed(42)
 np.random.seed(42)
@@ -25,7 +26,7 @@ class ROBOT:
     """
     Robot blueprints.
     """
-    def __init__(self, sim, genome,WHEEL_RADIUS,SPEED,MASS):
+    def __init__(self, sim, genome,WHEEL_RADIUS,SPEED,MASS, hidden_genome):
                
         Number_of_Wheels = 4
         # create a list for each Wheel.
@@ -84,8 +85,8 @@ class ROBOT:
                            mass=1,r=0, g=1, b=0, collision_group='robot')
                                                                 
         # Join the 3 boxes together.                            
-        joint = sim.send_hinge_joint( first_body_id = box , second_body_id = box2)
-        joint2 = sim.send_hinge_joint( first_body_id = box2 , second_body_id = box3)
+        joint = sim.send_hinge_joint( first_body_id = box , second_body_id = box2, lo=0, hi=0)
+        joint2 = sim.send_hinge_joint( first_body_id = box2 , second_body_id = box3,lo=0, hi=0)
         
         #if random() == True:
         #    X_Position = 
@@ -115,33 +116,134 @@ class ROBOT:
                                                     speed=SPEED)
                 count += 1
              
-        # dex426-patch-1
-        # create a weight matrix - im a little confused by this looking at other code examples i believe i want
-        # it to be a matrix with the number of wheels and touch sensors, but wheels are always touching the ground.
-        #### Example Video www.youtube.com/watch?v=GcWJXxrKNk
+       
+        post0 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
         
+        joint0 = sim.send_hinge_joint( first_body_id = box , second_body_id = post0)
+        
+        post1 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint1 = sim.send_hinge_joint( first_body_id = box , second_body_id = post1)
+        
+        post2 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint2 = sim.send_hinge_joint( first_body_id = box , second_body_id = post2)
+        
+        post3 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint3 = sim.send_hinge_joint( first_body_id = box , second_body_id = post3)
+        
+        post4 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint4 = sim.send_hinge_joint( first_body_id = box , second_body_id = post4)
+        
+        post5 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint5 = sim.send_hinge_joint( first_body_id = box , second_body_id = post5)
+        
+        post6 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint6 = sim.send_hinge_joint( first_body_id = box , second_body_id = post6)
+        
+        post7 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint7 = sim.send_hinge_joint( first_body_id = box , second_body_id = post7)
+        
+        post8 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint8 = sim.send_hinge_joint( first_body_id = box , second_body_id = post8)
+        
+        post9 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint9 = sim.send_hinge_joint( first_body_id = box , second_body_id = post9)
+        
+        post10 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        joint10 = sim.send_hinge_joint( first_body_id = box , second_body_id = post10
+                                     )
+        post11 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
+                           r=0, g=0, b=1, collision_group = 'robot')
+        
+        joint11 = sim.send_hinge_joint( first_body_id = box , second_body_id = post11)
+
         # ray sensors spaced Pi/6 radians apart.
         
+        rayOffset = 0.1
         raySensors = {}
-        raySensors[0] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=0,r3=0)
-        raySensors[1] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*1/6,r3=0) 
-        raySensors[2] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*2/6,r3=0) 
-        raySensors[3] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*3/6,r3=0) 
-        raySensors[4] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*4/6,r3=0) 
-        raySensors[5] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*5/6,r3=0) 
-        raySensors[6] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*6/6,r3=0) 
-        raySensors[7] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-1/6,r3=0) 
-        raySensors[8] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-2/6,r3=0)
-        raySensors[9] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-3/6,r3=0) 
-        raySensors[10] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-4/6,r3=0) 
-        raySensors[11] = sim.send_ray_sensor( body_id = box, x=0, y=0, z=1.5*WHEEL_RADIUS, r1=1, r2=math.pi*-5/6,r3=0)         
+                
+        # 1.00000000e-02,  0.00000000e+00]
+        raySensors[0] = sim.send_ray_sensor(body_id = post0, x=-0.01, y=0, z=1.5*WHEEL_RADIUS+rayOffset, r1=1, r2=0, r3=0)
+        
+        # [ 8.66025404e-03,  5.00000000e-03],
+        raySensors[1] = sim.send_ray_sensor(body_id = post1, x=0.00866, y=0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.866, r2=0.5, r3=0) 
+        
+        
+        # [ 5.00000000e-03,  8.66025404e-03],
+        raySensors[2] = sim.send_ray_sensor(body_id = post2, x=0.005, y=0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=0.866, r3=0) 
+        
+        
+        # [ 1.73472348e-18,  1.00000000e-02],
+        raySensors[3] = sim.send_ray_sensor(body_id = post3, x=0, y=0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=1, r3=0) 
+        
+        # [-5.00000000e-03,  8.66025404e-03],
+        raySensors[4] = sim.send_ray_sensor(body_id = post4, x=0.005, y=0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=0, r3=0) 
+       
+        # [-8.66025404e-03,  5.00000000e-03],
+        raySensors[5] = sim.send_ray_sensor(body_id = post5, x=-0.00866, y=0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.866, r2=0.5, r3=0) 
+        
+        # [-1.00000000e-02,  5.20417043e-18],
+        raySensors[6] = sim.send_ray_sensor(body_id = post6, x=-0.01, y=0, z=1.5*WHEEL_RADIUS+rayOffset, r1=-1, r2=0, r3=0) 
+        
+        # [-8.66025404e-03, -5.00000000e-03],
+        raySensors[7] = sim.send_ray_sensor(body_id = post7, x=-0.00866, y=-0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.866, r2=-0.5, r3=0) 
+        
+         # [-5.00000000e-03, -8.66025404e-03],
+        raySensors[8] = sim.send_ray_sensor(body_id = post8, x=-0.005, y=-0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.5, r2=-0.866, r3=0)
+        
+         # [-8.67361738e-18, -1.00000000e-02],
+        raySensors[9] = sim.send_ray_sensor(body_id = post9, x=0, y=-0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=-1, r3=0) 
+        
+        # [ 5.00000000e-03, -8.66025404e-03],
+        raySensors[10] = sim.send_ray_sensor(body_id = post10, x=-0.005, y=-0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=-0.866, r3=0) 
+        
+        # [ 8.66025404e-03, -5.00000000e-03]])
+        raySensors[11] = sim.send_ray_sensor(body_id = post11, x=-0.00866, y=-0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.866, r2=-0.5, r3=0)         
         
         
         # add sensor neurons
         sensorNeurons = {}
         for i, s in (raySensors.items()):
             sensorNeurons[i] = sim.send_sensor_neuron(s)
-            
+        
+        # hidden layer 1
+        hiddenNeurons = {}
+        #numHiddenNeurons = 24
+        for i in range(c.numHiddenNeurons):
+            hiddenNeurons[i] = sim.send_hidden_neuron()
+        
+        # weightings between sensor neurons and hidden layer
+        self.hidden_weights = hidden_genome
+        # self.hidden_weights2 = hidden_genome2
+        
+        # connect sensor neurons to hidden neurons 1
+        for hidden_weight_i, s in sensorNeurons.items():
+            for hidden_weight_j, h in hiddenNeurons.items():
+                sim.send_synapse(s, h, weight=self.hidden_weights[hidden_weight_i, hidden_weight_j])
+        
+        # # 2nd hidden layer
+        # hiddenNeurons2 = {}
+        # numHiddenNeurons2 = 24
+        # for i in range(numHiddenNeurons2):
+        #     hiddenNeurons2[i] = sim.send_hidden_neuron()
+        
+        
+        # # connect hidden 1 to hidden 2
+        # for hidden_weight_i, h1 in hiddenNeurons.items():
+        #     for hidden_weight_j, h2 in hiddenNeurons2.items():
+        #         sim.send_synapse(h1, h2, weight=self.hidden_weights2[hidden_weight_i, hidden_weight_j])
+        
+        
         # motor neurons
         mneurons = [0] * Number_of_Wheels
         for i in range(Number_of_Wheels):
@@ -149,13 +251,18 @@ class ROBOT:
             #sim.send_synapse(bias, mneurons[i], weight=random2())
         
         # weight matrix
-        
         self.weight_array= genome
         
-        # connect sensor neurons to motor neurons
-        for weight_i, s in (sensorNeurons.items()):
+        # connect hidden neurons to motor neurons
+        for weight_i, h in hiddenNeurons.items():
             for weight_j, m in enumerate(mneurons):
-                sim.send_synapse(s, m, weight = self.weight_array[weight_i, weight_j])
+                sim.send_synapse(h, m, weight = self.weight_array[weight_i, weight_j])
+                
+                
+        # # connect sensor neurons to motor neurons
+        # for weight_i, s in (sensorNeurons.items()):
+        #     for weight_j, m in enumerate(mneurons):
+        #         sim.send_synapse(s, m, weight = self.weight_array[weight_i, weight_j])
         
         
         # Can set surface area to a constraint
