@@ -149,16 +149,17 @@ class INDIVIDUAL:
         goal_saved_distance = collision_detected * goals_saved * distance_travelled
         
         if goal_saved_distance > 0 :
-            # reward for saving the goal 
-            return save_reward
-
+            # reward for saving the goal + distance travelled
+            return save_reward + distance_travelled
+        
+        elif collision_detected == 1 :
+            # reward for not saving the goal but touching the ball
+            return 100
+        
         elif goals_saved == 1:
             # reward for not conceding a goal even though by chance
             return not_conceding_score
 
-        else:
-            # punish for conceding a goal
-            return 0 *np.abs(distance_travelled)
 
     def reward_efforts(self, sphere_position_x, sphere_position_y, sphere_position_z):
         """It takes into consideration the distance between robot and ball at the time step when ball is just crossing
