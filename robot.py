@@ -4,6 +4,7 @@ import pyrosim # noqa
 import numpy as np
 import random
 import math
+import constants as c
 
 random.seed(42)
 np.random.seed(42)
@@ -217,8 +218,8 @@ class ROBOT:
         
         # hidden layer 1
         hiddenNeurons = {}
-        numHiddenNeurons = 24
-        for i in range(numHiddenNeurons):
+        #numHiddenNeurons = 24
+        for i in range(c.numHiddenNeurons):
             hiddenNeurons[i] = sim.send_hidden_neuron()
         
         # weightings between sensor neurons and hidden layer

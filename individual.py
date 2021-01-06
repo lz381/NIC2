@@ -18,12 +18,12 @@ class INDIVIDUAL:
         self.ball_psensor_id = 0
         self.robot_position = 0
         
-        numHiddenNeurons = 24
+        #numHiddenNeurons = 24
         # numHiddenNeurons2 = 24
         
         # intialize random weight array (len(sensor neurons) * len(mneurons))
-        self.genome = np.random.random(size=(numHiddenNeurons2, 4))*200-100
-        self.hidden_genome = np.random.random(size=(12, numHiddenNeurons)) * 200  - 100
+        self.genome = np.random.random(size=(c.numHiddenNeurons, 4))*200-100
+        self.hidden_genome = np.random.random(size=(12, c.numHiddenNeurons)) * 200  - 100
         #self.hidden_genome2 = np.random.random(size=(numHiddenNeurons, numHiddenNeurons2)) * 200  - 100
         
         self.WHEEL_RADIUS = 0.05
@@ -233,6 +233,34 @@ class INDIVIDUAL:
         
         
         #print(self.genome)
+        
+        
+        
+    def Crossover(self, other):
+        
+        flat_parent1_genome = self.genome.flatten()
+        flat_parent2_genome = other.genome.flatten()
+        
+        # random crossover point
+        crossover_idx = np.random.randint(len(flat_parent1_genome))
+        crossover_idx2 = np.random.randint(crossover_idx, len(flat_parent1_genome))
+        
+        # swap genes
+        flat_parent1_genome[crossover_idx:crossover_idx2] = flat_parent2_genome[crossover_idx:crossover_idx2]
+        
+        # NB. produces only one child
+        self.genome = flat_parent1_genome.reshape(self.genome.shape)
+        
+        # do the same for other genome
+        flat_parent1_hidden_genome = self.hidden_genome.flatten()
+        flat_parent2_hidden_genome = other.hidden_genome.flatten()
+        flat_parent1_hidden_genome[crossover_idx:crossover_idx2] = flat_parent2_hidden_genome[crossover_idx:crossover_idx2]
+        self.hidden_genome = flat_parent1_hidden_genome.reshape(self.hidden_genome.shape)
+            
+            
+            
+            
+            
         
     def Print(self):
         print('[', self.ID, ':', self.fitness, end=']')
