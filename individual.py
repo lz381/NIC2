@@ -159,6 +159,9 @@ class INDIVIDUAL:
         elif goals_saved == 1:
             # reward for not conceding a goal even though by chance
             return not_conceding_score
+        
+        else:
+            return 0
 
 
     def reward_efforts(self, sphere_position_x, sphere_position_y, sphere_position_z):
