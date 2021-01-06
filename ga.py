@@ -44,11 +44,16 @@ with open("mo1_nw4_sp10_wt12_ws10_wn100.csv", "w", newline="") as f:
             line.append(parents.p[j].fitness)
         writer.writerow(line)    
 
-        # If the gen number is right, then it saves the replay
         if i in instant_replay:
             filename = "RobotReplayGen_" + str(i) + ".p"
+            curHighestFitness = 0
+            curHighestIndex = 0
+            for j in range(parents.popsize):
+                if parents.p[j].fitness > curHighestFitness:
+                    curHighestFitness = parents.p[j].fitness
+                    curHighestIndex = j
             with open(filename, "wb") as f:
-                pickle.dump(parents.p[0], f)
+                pickle.dump(parents.p[j], f)
 
 
         # Start of actual GA
