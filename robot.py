@@ -120,52 +120,52 @@ class ROBOT:
         post0 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
         
-        joint0 = sim.send_hinge_joint( first_body_id = box , second_body_id = post0)
+        joint0 = sim.send_hinge_joint( first_body_id = box , second_body_id = post0, lo=0, hi=0)
         
         post1 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint1 = sim.send_hinge_joint( first_body_id = box , second_body_id = post1)
+        joint1 = sim.send_hinge_joint( first_body_id = box , second_body_id = post1, lo=0, hi=0)
         
         post2 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint2 = sim.send_hinge_joint( first_body_id = box , second_body_id = post2)
+        joint2 = sim.send_hinge_joint( first_body_id = box , second_body_id = post2, lo=0, hi=0)
         
         post3 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint3 = sim.send_hinge_joint( first_body_id = box , second_body_id = post3)
+        joint3 = sim.send_hinge_joint( first_body_id = box , second_body_id = post3, lo=0, hi=0)
         
         post4 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint4 = sim.send_hinge_joint( first_body_id = box , second_body_id = post4)
+        joint4 = sim.send_hinge_joint( first_body_id = box , second_body_id = post4, lo=0, hi=0)
         
         post5 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint5 = sim.send_hinge_joint( first_body_id = box , second_body_id = post5)
+        joint5 = sim.send_hinge_joint( first_body_id = box , second_body_id = post5, lo=0, hi=0)
         
         post6 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint6 = sim.send_hinge_joint( first_body_id = box , second_body_id = post6)
+        joint6 = sim.send_hinge_joint( first_body_id = box , second_body_id = post6, lo=0, hi=0)
         
         post7 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint7 = sim.send_hinge_joint( first_body_id = box , second_body_id = post7)
+        joint7 = sim.send_hinge_joint( first_body_id = box , second_body_id = post7, lo=0, hi=0)
         
         post8 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint8 = sim.send_hinge_joint( first_body_id = box , second_body_id = post8)
+        joint8 = sim.send_hinge_joint( first_body_id = box , second_body_id = post8, lo=0, hi=0)
         
         post9 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint9 = sim.send_hinge_joint( first_body_id = box , second_body_id = post9)
+        joint9 = sim.send_hinge_joint( first_body_id = box , second_body_id = post9, lo=0, hi=0)
         
         post10 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
-        joint10 = sim.send_hinge_joint( first_body_id = box , second_body_id = post10
-                                     )
+        joint10 = sim.send_hinge_joint( first_body_id = box , second_body_id = post10, lo=0, hi=0)
+        
         post11 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
         
-        joint11 = sim.send_hinge_joint( first_body_id = box , second_body_id = post11)
+        joint11 = sim.send_hinge_joint( first_body_id = box , second_body_id = post11, lo=0, hi=0)
 
         # ray sensors spaced Pi/6 radians apart.
         
