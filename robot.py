@@ -216,33 +216,21 @@ class ROBOT:
         for i, s in (raySensors.items()):
             sensorNeurons[i] = sim.send_sensor_neuron(s)
         
-        # hidden layer 1
-        hiddenNeurons = {}
-        #numHiddenNeurons = 24
-        for i in range(c.numHiddenNeurons):
-            hiddenNeurons[i] = sim.send_hidden_neuron()
+        # # hidden layer 1
+        # hiddenNeurons = {}
+        # #numHiddenNeurons = 24
+        # for i in range(c.numHiddenNeurons):
+        #     hiddenNeurons[i] = sim.send_hidden_neuron()
         
-        # weightings between sensor neurons and hidden layer
-        self.hidden_weights = hidden_genome
-        # self.hidden_weights2 = hidden_genome2
+        # # weightings between sensor neurons and hidden layer
+        # self.hidden_weights = hidden_genome
+        # # self.hidden_weights2 = hidden_genome2
         
-        # connect sensor neurons to hidden neurons 1
-        for hidden_weight_i, s in sensorNeurons.items():
-            for hidden_weight_j, h in hiddenNeurons.items():
-                sim.send_synapse(s, h, weight=self.hidden_weights[hidden_weight_i, hidden_weight_j])
-        
-        # # 2nd hidden layer
-        # hiddenNeurons2 = {}
-        # numHiddenNeurons2 = 24
-        # for i in range(numHiddenNeurons2):
-        #     hiddenNeurons2[i] = sim.send_hidden_neuron()
-        
-        
-        # # connect hidden 1 to hidden 2
-        # for hidden_weight_i, h1 in hiddenNeurons.items():
-        #     for hidden_weight_j, h2 in hiddenNeurons2.items():
-        #         sim.send_synapse(h1, h2, weight=self.hidden_weights2[hidden_weight_i, hidden_weight_j])
-        
+        # # connect sensor neurons to hidden neurons 1
+        # for hidden_weight_i, s in sensorNeurons.items():
+        #     for hidden_weight_j, h in hiddenNeurons.items():
+        #         sim.send_synapse(s, h, weight=self.hidden_weights[hidden_weight_i, hidden_weight_j])
+    
         
         # motor neurons
         mneurons = [0] * Number_of_Wheels
@@ -253,16 +241,16 @@ class ROBOT:
         # weight matrix
         self.weight_array= genome
         
-        # connect hidden neurons to motor neurons
-        for weight_i, h in hiddenNeurons.items():
-            for weight_j, m in enumerate(mneurons):
-                sim.send_synapse(h, m, weight = self.weight_array[weight_i, weight_j])
-                
-                
-        # # connect sensor neurons to motor neurons
-        # for weight_i, s in (sensorNeurons.items()):
+        # # connect hidden neurons to motor neurons
+        # for weight_i, h in hiddenNeurons.items():
         #     for weight_j, m in enumerate(mneurons):
-        #         sim.send_synapse(s, m, weight = self.weight_array[weight_i, weight_j])
+        #         sim.send_synapse(h, m, weight = self.weight_array[weight_i, weight_j])
+                
+                
+        # connect sensor neurons to motor neurons
+        for weight_i, s in (sensorNeurons.items()):
+            for weight_j, m in enumerate(mneurons):
+                sim.send_synapse(s, m, weight = self.weight_array[weight_i, weight_j])
         
         
         # Can set surface area to a constraint

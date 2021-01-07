@@ -26,7 +26,9 @@ class INDIVIDUAL:
         self.hidden_genome = np.random.random(size=(12, c.numHiddenNeurons)) * 200  - 100
         
         # genome: hidden layer to output
-        self.genome = np.random.random(size=(c.numHiddenNeurons, 4))*200-100
+        #self.genome = np.random.random(size=(c.numHiddenNeurons, 4))*200-100
+        
+        self.genome = np.random.random(size=(12, 4)) * 200 - 100
         
         #self.hidden_genome2 = np.random.random(size=(numHiddenNeurons, numHiddenNeurons2)) * 200  - 100
         
@@ -228,12 +230,12 @@ class INDIVIDUAL:
             self.genome = self.genome.reshape(*genome_copy.shape)
         
         
-        # hidden genome mutation - needs optimizing                
-        for row_idx, row in enumerate(self.hidden_genome):
-            for col_idx, col in enumerate(row):
-                chance = random.random()*100
-                if chance < self.adaptiveMutRate:
-                    self.hidden_genome[row_idx, col_idx] = np.random.random() * 200 - 100
+        # # hidden genome mutation - needs optimizing                
+        # for row_idx, row in enumerate(self.hidden_genome):
+        #     for col_idx, col in enumerate(row):
+        #         chance = random.random()*100
+        #         if chance < self.adaptiveMutRate:
+        #             self.hidden_genome[row_idx, col_idx] = np.random.random() * 200 - 100
         
         # for row_idx, row in enumerate(self.hidden_genome2):
         #     for col_idx, col in enumerate(row):
@@ -245,7 +247,6 @@ class INDIVIDUAL:
         #print(self.genome)
         
         # adaptive mutation
-        
         if c.adaptive_mutation_enabled:
             rechenberg_constant = 1.3
             xi = np.random.uniform(1/rechenberg_constant, rechenberg_constant)
