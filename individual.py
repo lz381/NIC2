@@ -249,7 +249,7 @@ class INDIVIDUAL:
         if c.adaptive_mutation_enabled:
             rechenberg_constant = 1.3
             xi = np.random.uniform(1/rechenberg_constant, rechenberg_constant)
-            self.adaptiveMutRate = self.adaptiveMutRate * xi
+            self.adaptiveMutRate = np.min([100, self.adaptiveMutRate * xi])
         
         
     def Crossover(self, other):
