@@ -50,6 +50,13 @@ $ python run_testbench.py <PICKLE_FILENAME.p> <NUMBER OF TRIALS> <NUMBER OF SHOT
 ```
 If no arguments are defined for the number of trails and shots, they are set to 10 and 100, respectively, by default. Running will output a list of average scores in each trial. Generally, results tending towards 1000 perform better than those tending towards 0. 
 
+It is useful to note that:
+
+- Fitness functions and mutation function are defined in ```individual.py```
+- Robot morphology and neuron allocation is in ```robot.py```
+- Training environemnts are in ```environment.py```
+- Tournament selection and elistism are found in ```population.py```
+
 ## Technologies
 - Python 3.6+
 - Pyrosim
