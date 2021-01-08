@@ -28,6 +28,8 @@ $ sh build.sh
 
 If using a windows machine, it is recommended to use a virtual machine to run linux and follow the instructions for linux based systems. Although this will increase runtimes considerably, this has been the most consistent method found so far. 
 
+After successfully installing pyrosim, clone this repository and continue onto the Usgae section. 
+
 ## Usage
 
 The main genetic algorithm can be run through ```ga.py```, which will print out the generation number and the fitness values of that generation in a list. The number of generations can be set in ```constants.py```, along with various other parameters including:
