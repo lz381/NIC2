@@ -74,21 +74,21 @@ class TEST:
 filename = sys.argv[1]
 
 if sys.argv[2]:
-    numTrials = sys.argv[2]
+    numTrials = int(sys.argv[2])
 else:
     numTrials = 10
     
 if sys.argv[3]:
-    numTests = sys.argv[3]
+    numTests = int(sys.argv[3])
 else:
     numTests = 100
 
 with open(filename, 'rb') as f:
     # load pickle
     best = pickle.load(f)
-
+    final_scores = []
     for trial in range(numTrials):
-        c.randomSeed = trial
+        c.randomSeed = trial + 1
         envs = TESTS()
         total_score = 0
         counter = 0
@@ -101,4 +101,7 @@ with open(filename, 'rb') as f:
             total_score += best.fitness
             counter += 1
         #print('Fitness of the best in this generation: ', best.fitness)
-        print(total_score/counter)
+        final_scores.append(total_score/counter)
+    print(final_scores)
+        
+    
