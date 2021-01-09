@@ -216,6 +216,19 @@ class INDIVIDUAL:
                         self.genome[row_idx, col_idx] = random.uniform(-100, 100)
                     else:
                         pass
+            # hidden genome mutation - needs optimizing
+            for row_idx, row in enumerate(self.hidden_genome):
+                for col_idx, col in enumerate(row):
+                    chance = random.random() * 100
+                    if chance < self.adaptiveMutRate:
+                        self.hidden_genome[row_idx, col_idx] = np.random.random() * 200 - 100
+
+            # for row_idx, row in enumerate(self.hidden_genome2):
+            #     for col_idx, col in enumerate(row):
+            #         chance = random.random()*100
+            #         if chance < c.mutRate:
+            #             self.hidden_genome2[row_idx, col_idx] = np.random.random() * 200 - 100
+
         # introducing the numpy vectorization for faster computation when muteRate is higher
         else:
             genome_copy = self.genome.copy()
@@ -226,22 +239,16 @@ class INDIVIDUAL:
             self.genome[idx] = [random.uniform(-100, 100) for i in idx]
             # self.genome[idx] = [random.gauss(self.genome[i], math.fabs(self.genome[i])) for i in idx]
             self.genome = self.genome.reshape(*genome_copy.shape)
-        
-        
-        # hidden genome mutation - needs optimizing                
-        for row_idx, row in enumerate(self.hidden_genome):
-            for col_idx, col in enumerate(row):
-                chance = random.random()*100
-                if chance < self.adaptiveMutRate:
-                    self.hidden_genome[row_idx, col_idx] = np.random.random() * 200 - 100
-        
-        # for row_idx, row in enumerate(self.hidden_genome2):
-        #     for col_idx, col in enumerate(row):
-        #         chance = random.random()*100
-        #         if chance < c.mutRate:
-        #             self.hidden_genome2[row_idx, col_idx] = np.random.random() * 200 - 100
-        
-        
+
+            # hidden genome mutation
+            hidden_genome_copy = self.hidden_genome.copy()
+            self.hidden_genome = self.hidden_genome.reshape(hidden_genome_copy.size)
+            # sampling the m indices from the solution without replacement
+            idx = random.sample(range(len(self.hidden_genome)), k=m)
+            self.hidden_genome[idx] = [random.uniform(-100, 100) for i in idx]
+            # self.hidden_genome[idx] = [random.gauss(self.hidden_genome[i], math.fabs(self.hidden_genome[i])) for i in idx]
+            self.hidden_genome = self.hidden_genome.reshape(*hidden_genome_copy.shape)
+
         #print(self.genome)
         
         # adaptive mutation
@@ -250,7 +257,6 @@ class INDIVIDUAL:
             rechenberg_constant = 1.3
             xi = np.random.uniform(1/rechenberg_constant, rechenberg_constant)
             self.adaptiveMutRate = np.min([100, self.adaptiveMutRate * xi])
-        
         
     def Crossover(self, other):
         
