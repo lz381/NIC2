@@ -25,7 +25,7 @@ Please follow the installation instructions for pyrosim [here](https://github.co
 ```sh
 $ sh build.sh
 ```
-If pyrosim has been installed before altering the source code, you must first uninstall it, chnage the code and then rebuild it, and finally reinstall.
+If pyrosim has been installed before altering the source code, you must first uninstall it, change the code and then rebuild it, and finally reinstall.
 
 If using a windows machine, it is recommended to use a virtual machine to run linux and follow the instructions for linux based systems. Although this will increase runtimes considerably, this has been the most consistent method found so far. 
 
