@@ -1,3 +1,6 @@
+"""
+robot module has ROBOT class which creates robot individuals inside the simulator according to the blueprints.
+"""
 import sys
 sys.path.insert(0, '../..')
 import pyrosim # noqa
@@ -14,20 +17,33 @@ np.random.seed(42)
 def random_bool():               
     return np.random.randint(2,size=1)[0]
 
+
 # create a random func that will select the number of wheels (pairs)  
 def random_Wheel():               
     return np.random.randint(9,size=1)[0]
 
+
 # create a random number between -1 and 1 using the random module with uniform dist
 def random2():               
     return random.uniform(-1,1)
+
 
 class ROBOT:
     """
     Robot blueprints.
     """
     def __init__(self, sim, genome,WHEEL_RADIUS,SPEED,MASS, hidden_genome):
-               
+        """
+        Initializes an individual robot with traits like Number_of_Wheels, genome,WHEEL_RADIUS,SPEED,MASS, hidden_genome
+        etc.
+        sim: instance of simulator class
+        genome: array of weight of synapses from sensor neurons to hidden neurons
+        WHEEL_RADIUS: radius of wheel of car (float)
+        SPEED: speed of motion of hinge joints between cars and wheel spheres
+        MASS: Mass of main box of the car
+        hidden_genome: array of weight of synapses from hidden neurons to motor neurons
+        return: None
+        """
         Number_of_Wheels = 4
         # create a list for each Wheel.
         wheels = [0] * Number_of_Wheels
@@ -37,13 +53,11 @@ class ROBOT:
         
         # Number of sides wheels can be placed on. (on a real life car this is 2).
         N_Sides = 2
-        
-        
+
         # Create a random number between 2 and 16 for number of Wheeels.
         random_num = random_Wheel()
         random_num = (random_num+1)*2
 
-        
         # if 1 pair of wheels place it randomly
         if Number_of_Wheels ==2:        
             # create the length of the car based on the number of wheels
@@ -66,9 +80,7 @@ class ROBOT:
             Wheel_Space_2 = list(map(lambda x: (x/100)*WHEEL_RADIUS, Wheel_Space))
             Wheel_Space_2.append(Len_Car*WHEEL_RADIUS)
         
-        
-        
-        
+
         # Create a Red Car Body.
         box = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= Len_Car*2 *
                            WHEEL_RADIUS, width=4 * WHEEL_RADIUS, height=WHEEL_RADIUS,
@@ -116,7 +128,7 @@ class ROBOT:
                                                     speed=SPEED)
                 count += 1
              
-       
+        # creating 12 posts for 12 ray sensor.
         post0 = sim.send_box(x=0, y=0, z=1.5 * WHEEL_RADIUS, length= 0.01, width=0.01, height=0.01,
                            r=0, g=0, b=1, collision_group = 'robot')
         
@@ -177,12 +189,10 @@ class ROBOT:
         
         # [ 8.66025404e-03,  5.00000000e-03],
         raySensors[1] = sim.send_ray_sensor(body_id = post1, x=0.00866, y=0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.866, r2=0.5, r3=0, max_distance=20) 
-        
-        
+
         # [ 5.00000000e-03,  8.66025404e-03],
         raySensors[2] = sim.send_ray_sensor(body_id = post2, x=0.005, y=0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=0.5, r2=0.866, r3=0, max_distance=20) 
-        
-        
+
         # [ 1.73472348e-18,  1.00000000e-02],
         raySensors[3] = sim.send_ray_sensor(body_id = post3, x=0, y=0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=1, r3=0, max_distance=20) 
         
@@ -198,10 +208,10 @@ class ROBOT:
         # [-8.66025404e-03, -5.00000000e-03],
         raySensors[7] = sim.send_ray_sensor(body_id = post7, x=-0.00866, y=-0.005, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.866, r2=-0.5, r3=0, max_distance=20) 
         
-         # [-5.00000000e-03, -8.66025404e-03],
+        # [-5.00000000e-03, -8.66025404e-03],
         raySensors[8] = sim.send_ray_sensor(body_id = post8, x=-0.005, y=-0.00866, z=1.5*WHEEL_RADIUS+rayOffset, r1=-0.5, r2=-0.866, r3=0, max_distance=20)
         
-         # [-8.67361738e-18, -1.00000000e-02],
+        # [-8.67361738e-18, -1.00000000e-02],
         raySensors[9] = sim.send_ray_sensor(body_id = post9, x=0, y=-0.01, z=1.5*WHEEL_RADIUS+rayOffset, r1=0, r2=-1, r3=0, max_distance=20) 
         
         # [ 5.00000000e-03, -8.66025404e-03],
@@ -257,19 +267,15 @@ class ROBOT:
         for weight_i, h in hiddenNeurons.items():
             for weight_j, m in enumerate(mneurons):
                 sim.send_synapse(h, m, weight = self.weight_array[weight_i, weight_j])
-                
-                
+
         # # connect sensor neurons to motor neurons
         # for weight_i, s in (sensorNeurons.items()):
         #     for weight_j, m in enumerate(mneurons):
         #         sim.send_synapse(s, m, weight = self.weight_array[weight_i, weight_j])
-        
-        
+
         # Can set surface area to a constraint
         Surface_Area = Number_of_Wheels*4*math.pi*WHEEL_RADIUS**2 + 2*Len_Car*2*WHEEL_RADIUS*4 * WHEEL_RADIUS*WHEEL_RADIUS
         
         # create a sensor to detect the collision between the ball and robot - do we need this if we just assign the robot to collision group?
         self.tsensor_id = sim.send_touch_sensor(body_id = box)
         self.position = sim.send_position_sensor(body_id = box)
-
-    

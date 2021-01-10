@@ -1,3 +1,8 @@
+"""
+This module has the configuration details to set the parameters for virtual creature simulation of genetic algorithm in pyrosim.
+For e.g., popSize, elitismRate, mutRate, randomSeed etc can be set here.
+"""
+
 evalTime = 500
 popSize = 12
 numGens = 1000
@@ -8,7 +13,5 @@ fitnessMetric = 'best_keeper'  # string: goals_scored, distance_travelled, best_
 randomSeed = 42  # integer
 crossover_enabled = False
 adaptive_mutation_enabled = False # for now
-
-
 numHiddenNeurons = 24 # TO BE CHANGED
 mutRate = 40    # TO BE CHANGED

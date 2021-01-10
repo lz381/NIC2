@@ -1,6 +1,19 @@
+"""
+environment module has ENVIRONMENT class to simulate the pyrosim
+"""
+
+
 class ENVIRONMENT:
-    
+    """
+    Sets the environment for evaluation of virtual creature robots. It defines the structure and position of goal post.
+    It also defines the 10 ball shots which are directed towards the goal with certain force and angle. These ball shots
+    are a target for the goal keeper robot to stop.
+    """
     def __init__(self, env_id):
+        """
+        Initialize an environment. It sets an environment ID, ball_radius, ball_z, ball_psensor_id.
+        return: None
+        """
         self.ID = env_id
 
         # ball params
@@ -9,7 +22,11 @@ class ENVIRONMENT:
         self.ball_psensor_id = 0
         
     def Send_To(self, sim):
-        
+        """
+        Defines the 10 ball shots which are directed towards the goal with certain force and angle. These ball shots
+        are a target for the goal keeper robot to stop. Each environment simulates a different starting position,
+        application of force and direction on the ball.
+        """
         # goalpost params
         goal_width = 5
         goal_height = 2
@@ -50,7 +67,7 @@ class ENVIRONMENT:
             sim.send_external_force(ball, x=0, y=-10, z=0, time=5)
 
            
-        # for jumping robots?
+        # fourth shot
         if self.ID == 3:
             ball = sim.send_sphere(x=-0, y=6, z=self.ball_z, radius=self.ball_radius, collision_group = 'ball')
             sim.send_external_force(ball, x=-6, y=-10, z=0, time=5)
@@ -89,5 +106,3 @@ class ENVIRONMENT:
                 
         # retrieve the position sensor id for the ball
         self.ball_psensor_id = sim.send_position_sensor(body_id = ball)
-        
-        

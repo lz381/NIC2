@@ -4,12 +4,14 @@
 Created on Fri Jan  8 12:19:05 2021
 
 @author: leon
+
 """
 
 import numpy as np
 import pickle
 import constants as c
 import sys
+
 
 class TESTS:
     
@@ -20,7 +22,6 @@ class TESTS:
         # dict of 100 tests
         for e in range(0, numTests):
             self.envs[e] = TEST(e)
-            
 
 
 class TEST:
@@ -103,5 +104,3 @@ with open(filename, 'rb') as f:
         #print('Fitness of the best in this generation: ', best.fitness)
         final_scores.append(total_score/counter)
     print(final_scores)
-        
-    
